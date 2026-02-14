@@ -1,0 +1,56 @@
+#container{
+    width: 1200px;
+    height: 300px;
+    border: 3px solid black;
+}
+.box{
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+    margin:10px;
+    width: 150px;
+    height: 150px;
+    background-color: seagreen;
+    border: 3px dashed black;
+}
+
+#box2{
+    background-color: tomato;
+}
+#box3{
+    background-color: lightblue;
+}
+#box4{
+    background-color: lightcoral;
+}
+#box5{
+    background-color: lightgreen;
+}
+
+/* Flexbox */
+
+/* Flexbox Direction */
+
+#container{
+    display: flex;
+    flex-direction: row; /* default row */
+    /* flex-direction: row-reverse; reverse the row from right to left */
+    /* flex-direction: column; column from top to bottom */
+    /* flex-direction: column-reverse; reverse the column from bottom to top */
+}
+
+/* Flex Properties */
+
+#container{
+    justify-content: center; /* default flex-start */
+    /* justify-content: flex-end; align items to the end of the container */
+    /* justify-content: space-between; distribute items evenly with space between them */
+    /* justify-content: space-around; distribute items evenly with space around them */
+    /* justify-content: space-evenly; distribute items evenly with equal space around them */
+    flex-wrap: wrap; /* if items exceed the container width, they will wrap to the next line */
+}
+
+#container{
+    /* flex-grow: 1; default 0, allows items to grow and fill available space */
+    /* flex-shrink: 1; default 1, allows items to shrink if necessary */
+}

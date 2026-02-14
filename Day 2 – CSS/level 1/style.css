@@ -1,0 +1,100 @@
+/* h1{
+    color: rgb(7, 101, 195);
+}
+
+p{
+    color: rgb(15, 179, 249);
+}
+
+button{
+    background-color: #0b4e8c;
+    color: white;
+} */
+
+/*--------Selectors--------*/
+
+/* Universal Selector */
+*{
+    font-family: Arial, Helvetica, sans-serif;
+    color:steelblue;
+}
+
+/* Type Selector */
+h1{
+    color: rgb(7, 101, 195);
+}
+
+/* id Selector */
+#heading1{
+    color:chocolate;
+}
+#heading2{
+    color: teal;
+}
+#heading3{
+    color: dodgerblue;
+}
+
+/* Class Selector */
+.heading{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/*------------- Text Properties --------------*/
+
+/* text-decoration */
+
+body{
+    text-align: center;
+}
+
+#heading1{
+    text-decoration: overline;
+}
+#heading2{
+    text-decoration: red line-through;
+}
+#heading3{
+    text-decoration: underline;
+}
+
+a{
+    text-decoration: none;
+}
+
+
+/* font-weight */
+
+#heading1{
+    font-weight: 200;
+}
+#heading2{
+    font-weight: 400;
+}
+#heading3{
+    font-weight: 700;
+}
+
+/* font-size */
+
+p{
+    font-size: 18px;
+}
+
+/* line-height */
+
+p{
+    line-height: 30px;
+}
+
+/* text-transform */
+
+#heading1{
+    text-transform: uppercase;
+}
+#heading2{
+    text-transform: lowercase;
+}
+#heading3{
+    text-transform: capitalize;
+}

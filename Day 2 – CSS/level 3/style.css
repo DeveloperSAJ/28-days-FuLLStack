@@ -1,0 +1,66 @@
+.box{
+    background-color: lightblue;
+    width: 200px;
+    height: 200px;
+    border: 3px dashed black;
+    padding: 10px;
+    margin: 20px;
+    display: inline-block;
+    text-align: center;
+}
+#innerBox{
+    background-color: crimson;
+    width: 100px;
+    height: 100px;
+}
+
+/* relative Units */
+
+#innerBox{
+    /* width: 50%; % is used relative to the parent element's width */
+    font-size: 1.5em; /* em is relative to the font size of the parent element */
+    margin: 2rem; /* rem is relative to the root element's font size */
+    width: 6vw; /* vw is relative to the viewport's width */
+    height: 10vh; /* vh is relative to the viewport's height */
+}
+
+/* Position */
+
+/* Static Positioning */
+#box2{
+    background-color: lightsteelblue;
+    position: static; /* default position, elements are positioned according to the normal flow of the document */
+}
+/* Relative Positioning */
+#box3{
+    background-color: lightseagreen;
+    position: relative; /* elements are positioned relative to their normal position */
+    top: 50px;
+    right: 80px; 
+}
+/* Absolute Positioning */
+#box4{
+    background-color: lightcoral;
+    position: absolute; /* elements are positioned relative to the nearest positioned ancestor (if any), otherwise relative to the initial containing block */
+    top: 150px;
+    left: 620px;
+}
+/* Fixed Positioning */
+#box5{
+    background-color: seagreen;
+    position: fixed; /* elements are positioned relative to the viewport, which means they always stay in the same place even if the page is scrolled */
+    top: 10px;
+    right: 10px;
+}
+/* Sticky Positioning */
+#box6{
+    background-image: url("image.jpg");
+    background-size: cover;
+    position: sticky; /* elements are positioned based on the user's scroll position. A sticky element toggles between relative and fixed, depending on the scroll position */
+    top: 0; /* when the element reaches the top of the viewport, it will stick there */
+}
+
+/* Z-index */
+#box3{
+    z-index: 1; /* elements with a higher z-index will be displayed in front of elements with a lower z-index */
+}
