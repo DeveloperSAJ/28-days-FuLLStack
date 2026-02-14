@@ -1,0 +1,68 @@
+.box{
+    height: 100px;
+    width: 100px;
+    background-color: aquamarine;
+}
+body{
+    text-align: center;
+}
+h1{
+    color:rgba(32, 224, 238, 0.5); /* rgba(red, green, blue, alpha) => alpha used for opacity */
+}
+
+/* Border */
+
+/* .box{
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+} */
+
+.box{
+    border: 3px dashed black;
+}
+
+#box1{
+    border-radius: none;
+}
+
+#box2{
+    border-radius: 15px;
+}
+
+#box3{
+    border-radius: 50%;
+}
+
+/* Padding */
+
+.box{
+    /* padding-left: 25px; */
+    /* padding: 10px; */
+    padding: 1px,2px,3px,4px; /* top, right, bottom, left -> ClockWise*/
+}
+
+/* Margin */
+
+.box{
+    /* margin: 20px; */
+    /* margin: 1px 2px 3px 4px;  top, right, bottom, left -> ClockWise*/
+}
+/* #box2{
+    margin-left: 30px;
+} */
+
+
+/* Display */
+
+.box{
+    /* display: block; => takes full width*/
+    /* display: inline; => make it inline element but removes the margin and padding */
+    display: inline-block;/* => allows the element to be inline but still respects the margin and padding */
+    margin: 10px;
+}
+
+#box1{
+    /* display: none; => Removes the element from the DOM */
+    /* visibility: hidden; => Hides the element but it still takes up space in the DOM */
+}
