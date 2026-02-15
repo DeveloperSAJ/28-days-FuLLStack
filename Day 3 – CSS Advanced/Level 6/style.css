@@ -1,0 +1,145 @@
+/* Deep Electric Background → #0A0F1F
+
+Dark Navy Secondary → #111827
+
+Neon Blue → #00F5FF
+
+Electric Cyan → #00E0FF
+
+Voltage Purple → #7C3AED
+
+Energy Pink Accent → #FF2DFB
+
+Bright White → #E6F7FF*/
+
+body{
+    background-color: #0B1120;
+    color: #E2E8F0;
+    font-size: 18px;
+}
+
+nav{
+    display: flex;
+    position: sticky;
+    top: 0;
+    background-color: #0B1120;
+    justify-content: center;
+    gap: 20px;
+}
+nav a{
+    margin: 10px;
+    color:#00E0FF;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+h1{
+    margin-bottom: 120px;
+    text-align: center;
+    font-size: 50px;
+    color: #10bcec;
+}
+.hero{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background-color: #022532;
+    padding: 20px;
+    height: 600px;
+}
+.hero h2{
+    color: #00F5FF;
+}
+
+.hero p{
+    max-width: 1000px;
+    margin: 20px auto;
+    line-height: 1.6;
+    color: #E6F7FF;
+}
+
+.content{
+    text-align: center;
+}
+.content h2{
+    color: #10bcec;
+}
+.POB{
+    
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.POB div{
+    font-size: 20px;
+    text-align: center;
+    justify-content: center;
+    background-color: #045b7b;
+    padding: 20px;
+    border-radius: 10px;
+}
+.POB div ul li{
+    list-style: disc;
+    text-align: left;
+}
+.content2{
+    text-align: center;
+}
+.content2 h2{
+    color: #10bcec;
+}
+
+.MS{
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.MS div{
+    font-size: 20px;
+    text-align: center;
+    justify-content: center;
+    background-color: #045b7b;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.facts h2{
+    color: #10bcec;
+    text-align: center;
+}
+.facts ul li{
+    font-size: 20px;
+}
+
+footer{
+    text-align: center;
+    color: #10bcec;
+}
+
+
+@media (max-width: 800px){
+    .POB{
+        grid-template-columns: 1fr 1fr;
+    }
+    .MS{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 500px){
+    .POB{
+        grid-template-columns: 1fr;
+    }
+    .MS{
+        grid-template-columns: 1fr;
+    }
+}
