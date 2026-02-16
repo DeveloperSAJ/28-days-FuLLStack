@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Object Model (DOM)</title>
+  </head>
+  <body>
+    <p>Youtube Subscribe</p>
+    <button class="js-subscribe-btn" onclick="">Subscribe</button>
+    <br />
+    <hr />
+    <br />
+    <h1>Rock Paper Scissors</h1>
+    <button onclick="playGame('Rock')">Rock</button>
+    <button onclick="playGame('Paper')">Paper</button>
+    <button onclick="playGame('Scissors')">Scissors</button>
+    <p class="js-result"></p>
+    <p class="js-moves"></p>
+    <p class="js-score"></p>
+    <button onclick="resetScore()">Reset Score</button>
+    <br />
+    <hr />
+    <br />
+    <p>Amazon Shipping Calcluator</p>
+    <input placeholder="Cost of order" type="number" class="js-cost-input" onkeydown="handleCostKey(event)">
+    <button onclick={calculateTotal()}>Calculate</button>
+    <p class="js-total-cost"></p>
+    <script src="script.js"></script>
+  </body>
+</html>
