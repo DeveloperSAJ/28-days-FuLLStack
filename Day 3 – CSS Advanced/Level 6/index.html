@@ -8,20 +8,26 @@
   </head>
   <body>
     <nav>
-      <a href="#">Brain Parts</a>
-      <a href="#">Memory</a>
-      <a href="#">Facts</a>
+      <a href="#brain-parts">Brain Parts</a>
+      <a href="#memory">Memory</a>
+      <a href="#facts">Facts</a>
     </nav>
     <section class="hero">
-      <h1>How human brain works</h1>
-      <h2>Introduction</h2>
-      <p>
-        The human brain is a complex organ that controls the body's functions
-        and processes information. It is responsible for memory, learning,
-        emotions, and decision-making.
-      </p>
+      <video autoplay muted loop playsinline class="bg-video">
+        <source src="media/brain.mp4" type="video/mp4" />
+      </video>
+      <div class="overlay"></div>
+      <div class="Hcontent">
+        <h1 class="glow-text">How human brain works</h1>
+        <h2>Introduction</h2>
+        <p>
+          The human brain is a complex organ that controls the body's functions
+          and processes information. It is responsible for memory, learning,
+          emotions, and decision-making.
+        </p>
+      </div>
     </section>
-    <section class="content">
+    <section class="content" id="brain-parts">
       <h2>Main Brain Parts</h2>
       <div class="POB">
         <div>
@@ -84,7 +90,7 @@
       </div>
     </section>
     <hr />
-    <section class="content2">
+    <section class="content2" id="memory">
       <h2>Memory Systems</h2>
       <div class="MS">
         <div>
@@ -140,10 +146,10 @@
       </div>
     </section>
     <hr />
-    <section class="facts">
+    <section class="facts" id="facts">
       <h2>Interesting Facts</h2>
       <div>
-        <ul>
+        <ul class="facts-list">
           <li>The human brain weighs about 1.4 kilograms (3 pounds).</li>
           <li>It contains around 86 billion neurons.</li>
           <li>

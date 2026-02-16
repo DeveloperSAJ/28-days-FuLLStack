@@ -17,14 +17,35 @@ body{
     color: #E2E8F0;
     font-size: 18px;
 }
+html{
+    scroll-behavior: smooth;
+}
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* control opacity here */
+}
 
 nav{
+    z-index: 3;
     display: flex;
     position: sticky;
     top: 0;
     background-color: #0B1120;
     justify-content: center;
     gap: 20px;
+    border-bottom: 2px solid #00E0FF;
 }
 nav a{
     margin: 10px;
@@ -48,22 +69,28 @@ h1{
     padding: 20px;
     height: 600px;
 }
+.Hcontent{
+    z-index: 2;
+}
 .hero h2{
     color: #00F5FF;
 }
 
 .hero p{
     max-width: 1000px;
+    font-size: 24px;
     margin: 20px auto;
     line-height: 1.6;
     color: #E6F7FF;
 }
 
 .content{
+    margin-top: 80px;
     text-align: center;
 }
 .content h2{
     color: #10bcec;
+    z-index: 2;
 }
 .POB{
     
@@ -72,6 +99,7 @@ h1{
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
     gap: 20px;
+    margin-bottom: 50px;
     padding: 20px;
 }
 
@@ -79,9 +107,17 @@ h1{
     font-size: 20px;
     text-align: center;
     justify-content: center;
-    background-color: #045b7b;
+    background-color:#10bcec;
+    color: #0B1120;
     padding: 20px;
     border-radius: 10px;
+}
+
+.POB div:hover{
+    background-color: #00E0FF;
+    color: #0B1120;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 8px #00E0FF, 0 6px 20px #00E0FF, 0 8px 40px #00E0FF;
 }
 .POB div ul li{
     list-style: disc;
@@ -100,16 +136,26 @@ h1{
     grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
     gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 50px;
     padding: 20px;
 }
 
 .MS div{
     font-size: 20px;
     text-align: center;
+    color: #0B1120;
     justify-content: center;
-    background-color: #045b7b;
+    background-color: #10bcec;
     padding: 20px;
     border-radius: 10px;
+}
+
+.MS div:hover{
+    background-color: #00E0FF;
+    color: #0B1120;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 8px #00E0FF, 0 6px 20px #00E0FF, 0 8px 40px #00E0FF;
 }
 
 .facts h2{
@@ -125,7 +171,28 @@ footer{
     color: #10bcec;
 }
 
+.facts-list{
+    display: flex;
+    flex-direction: column;
+    margin-right:40px ;
+}
 
+.facts-list li{
+    text-align: center;
+    list-style: none;
+    color: #0B1120;
+    border-radius: 8px;
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #10bcec;
+}
+
+.facts-list li:hover{
+    background-color: #00E0FF;
+    color: #0B1120;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 4px 8px #00E0FF;
+}
 @media (max-width: 800px){
     .POB{
         grid-template-columns: 1fr 1fr;
@@ -142,4 +209,36 @@ footer{
     .MS{
         grid-template-columns: 1fr;
     }
+}
+
+.glow-text {
+  font-size: 60px;
+  font-weight: bold;
+  text-align: center;
+  color: #10bcec;
+  letter-spacing: 5px;
+  
+  background: linear-gradient(
+    90deg,
+    #10bcec 0%,
+    #00F5FF 40%,
+    #00ffff 50%,
+    #00F5FF 60%,
+    #10bcec 100%
+  );
+  
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: glowMove 5s linear infinite;
+}
+
+@keyframes glowMove {
+  0% {
+    background-position: 200%;
+  }
+  100% {
+    background-position: -200%;
+  }
 }
