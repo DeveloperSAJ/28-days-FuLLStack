@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML-CSS-JS</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div>
+      <p class="s-text">Youtube Subscribe Botton</p>
+      <button class="js-subscribe-btn s-btn" onclick="subscribe()">
+        Subscribe
+      </button>
+    </div>
+
+    <div style="margin-bottom: 50px;">
+      <p>Amazon Shipping Calcluator</p>
+      <input
+        placeholder="Cost of order"
+        type="number"
+        class="js-cost-input cost-input"
+        onkeydown="handleCostKey(event)"
+      />
+      <button
+        class="calculate-btn"
+        onclick="
+          {
+            calculateTotal();
+          }
+        "
+      >
+        Calculate
+      </button>
+      <p class="js-total-cost"></p>
+    </div>
+
+    <div class="game">
+      <p class="title">Rock Paper Scissors</p>
+      <button onclick="playGame('Rock')" class="move-btn"><img class="move-icon" src="images/rock-emoji.png" alt="Rock" ></button>
+      <button onclick="playGame('Paper')" class="move-btn"><img class="move-icon" src="images/paper-emoji.png" alt="Paper"></button>
+      <button onclick="playGame('Scissors')" class="move-btn"><img class="move-icon" src="images/scissors-emoji.png" alt="Scissors"></button>
+      <p class="js-result result"></p>
+      <p class="js-moves">
+      </p>
+      <p class="js-score score"></p>
+      <button class="reset-btn" onclick="resetScore()">Reset Score</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
