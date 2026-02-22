@@ -1,13 +1,13 @@
 import "./App.css";
-import ColorPicker from "./Color Picker App/ColorPicker";
+import ToDoList from "./ToDoList App/ToDoList";
 
 function App() {
   
   return (
     <>
-    < ColorPicker />
+    <ToDoList/>
     </>
-  );
+  )
 }
 
 export default App;

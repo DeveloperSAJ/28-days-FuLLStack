@@ -31,7 +31,7 @@ body{
 
 /* Color Picker App */
 
-.container{
+/* .container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,4 +68,92 @@ input[type="color"]{
   padding: 5px;
   border-radius: 10px;
   border: 3px solid hsl(0, 0%, 80%)
+} */
+
+/* --------------------------------------------------- */
+
+/* To-Do-List App */
+
+body{
+  background-color: black;
+}
+
+.container{
+  text-align: center;
+  margin-top: 100px;
+
+}
+h1{
+  color: white;
+  font-size: 4rem;
+}
+
+button{
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5 ease;
+}
+
+.add-btn{
+  background-color: teal;
+}
+
+.add-btn:hover{
+  background-color: rgb(1, 150, 150);
+}
+
+.delete-btn{
+  background-color: darkred;
+}
+
+.delete-btn:hover{
+  background-color: rgb(163, 2, 2);
+}
+
+.move-btn{
+    background-color: cornflowerblue;
+}
+
+.move-btn:hover{
+    background-color: rgb(116, 157, 235);
+}
+
+input[type="text"]{
+  font-size: 1.6rem;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  color: black;
+}
+
+ol{
+  padding: 0;
+}
+li{
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.text{
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+}
+
+.delete-btn, .move-btn{
+  border-radius: 5px;
+  margin: auto 5px;
+  padding: 8px 12px;
+  font-size: 1.4rem;
 }
