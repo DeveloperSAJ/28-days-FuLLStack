@@ -1,0 +1,28 @@
+body{
+  font-family: Arial;
+}
+.container{
+  text-align: center;
+}
+.count {
+  font-size: 10em;
+  color: cornflowerblue;
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+.btn{
+  width: 150px;
+  margin: auto 10px;
+  height: 50px;
+  font-size: 1.5em;
+  font-weight: bold;
+  background-color: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover{
+  background-color: rgb(82, 122, 198);
+}
