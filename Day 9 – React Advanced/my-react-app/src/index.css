@@ -74,7 +74,7 @@ input[type="color"]{
 
 /* To-Do-List App */
 
-body{
+/* body{
   background-color: black;
 }
 
@@ -156,4 +156,33 @@ li{
   margin: auto 5px;
   padding: 8px 12px;
   font-size: 1.4rem;
+} */
+
+/* --------------------------------------------------- */
+
+/* Digital Clock App */
+
+body{
+  background-image: url(./assets/developer.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  min-height: 70vh;
+  align-items: center;
+}
+
+.clock{
+  color: white;
+  font-size: 5rem;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+  text-shadow: 3px 3px 5px black;
 }
