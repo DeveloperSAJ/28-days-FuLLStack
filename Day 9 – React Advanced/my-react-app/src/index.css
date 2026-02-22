@@ -1,0 +1,246 @@
+body{
+  font-family: Arial;
+}
+/* .container{
+  text-align: center;
+}
+.count {
+  font-size: 10em;
+  color: cornflowerblue;
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+.btn{
+  width: 150px;
+  margin: auto 10px;
+  height: 50px;
+  font-size: 1.5em;
+  font-weight: bold;
+  background-color: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover{
+  background-color: rgb(82, 122, 198);
+} */
+
+/* --------------------------------------------------- */
+
+/* Color Picker App */
+
+/* .container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1{
+  margin:  50px;
+  font-size: 3em;
+}
+.color{
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  transition:  0.25s ease;
+}
+
+.color p{
+  color: black;
+  font-size: 2rem;
+  text-align: center;
+}
+label{
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+input[type="color"]{
+  width: 75px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 3px solid hsl(0, 0%, 80%)
+} */
+
+/* --------------------------------------------------- */
+
+/* To-Do-List App */
+
+/* body{
+  background-color: black;
+}
+
+.container{
+  text-align: center;
+  margin-top: 100px;
+
+}
+h1{
+  color: white;
+  font-size: 4rem;
+}
+
+button{
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5 ease;
+}
+
+.add-btn{
+  background-color: teal;
+}
+
+.add-btn:hover{
+  background-color: rgb(1, 150, 150);
+}
+
+.delete-btn{
+  background-color: darkred;
+}
+
+.delete-btn:hover{
+  background-color: rgb(163, 2, 2);
+}
+
+.move-btn{
+    background-color: cornflowerblue;
+}
+
+.move-btn:hover{
+    background-color: rgb(116, 157, 235);
+}
+
+input[type="text"]{
+  font-size: 1.6rem;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  color: black;
+}
+
+ol{
+  padding: 0;
+}
+li{
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.text{
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+}
+
+.delete-btn, .move-btn{
+  border-radius: 5px;
+  margin: auto 5px;
+  padding: 8px 12px;
+  font-size: 1.4rem;
+} */
+
+/* --------------------------------------------------- */
+
+/* Digital Clock App */
+
+/* body{
+  background-image: url(./assets/developer.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  min-height: 70vh;
+  align-items: center;
+}
+
+.clock{
+  color: white;
+  font-size: 5rem;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+  text-shadow: 3px 3px 5px black;
+} */
+
+/* --------------------------------------------------- */
+
+/* .box{
+  border: 3px solid black;
+} */
+
+/* --------------------------------------------------- */
+
+/* Stop Watch App */
+
+body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: gray;
+}
+
+.stopwatch{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px solid;
+  border-radius: 50px;
+  background-color: white;
+  padding: 30px;
+}
+
+.display{
+  font-size: 5rem;
+  font-family: monospace;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.controls button{
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 5px;
+  min-width: 125px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.5s ease;
+} 
+.start-btn{
+  background-color: teal;
+}
+
+.stop-btn{
+  background-color: crimson;
+}
+
+.reset-btn{
+  background-color: cornflowerblue;
+}
