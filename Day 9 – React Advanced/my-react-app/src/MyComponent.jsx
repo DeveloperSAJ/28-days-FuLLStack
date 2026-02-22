@@ -17,6 +17,7 @@ function MyComponent() {
   const updateStatus = () => {
     setIsEmployed(!isEmployed);
   }
+  
   return (
     <div>
       <p>Name: {name}</p>

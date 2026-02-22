@@ -1,11 +1,11 @@
 import "./App.css";
-import Counter from "./Counter App/Counter";
+import ColorPicker from "./Color Picker App/ColorPicker";
 
 function App() {
   
   return (
     <>
-    < Counter />
+    < ColorPicker />
     </>
   );
 }
