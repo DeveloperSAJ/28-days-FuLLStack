@@ -1,11 +1,11 @@
 import "./App.css";
-import DigitalClock from "./Digital Clock/DigitalClock";
+import StopWatch from "./Stop Watch/StopWatch";
 
 function App() {
   
   return (
     <>
-    <DigitalClock />
+    <StopWatch />
     </>
   )
 }
