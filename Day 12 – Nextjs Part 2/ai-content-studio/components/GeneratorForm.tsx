@@ -1,109 +1,109 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Loader from "./Loader";
 
 interface Message {
   type: "user" | "ai";
   text: string;
 }
 
-export default function GeneratorForm() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+type Personality = "bestfriend" | "girlfriend";
 
+interface GeneratorFormProps {
+  messages?: Message[];
+  onSend: (message: string, personality: Personality) => void;
+  loading: boolean;
+  personality: Personality;
+  onPersonalityChange: (newPersonality: Personality) => void;
+}
+
+export default function GeneratorForm({
+  messages = [],
+  onSend,
+  loading,
+  personality,
+  onPersonalityChange,
+}: GeneratorFormProps) {
+  const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when new message added
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!input.trim()) return;
-
-    // Add user message
-    setMessages((prev) => [...prev, { type: "user", text: input }]);
-
-    const userMessage = input;
+    onSend(input, personality);
     setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
-
-      const data = await res.json();
-
-      // Add AI response
-      setMessages((prev) => [...prev, { type: "ai", text: data.content }]);
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { type: "ai", text: "Error: Could not generate response." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+  const handlePersonalityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newPersonality = e.target.value as Personality;
+    if (newPersonality !== personality) {
+      onPersonalityChange(newPersonality);
     }
   };
 
   return (
-    <>
-      <div className="max-w-2xl mx-auto mt-10 flex flex-col h-[70vh] border-2 rounded-lg p-4 bg-white">
-        {/* Chat messages */}
-        <div className="flex-1 overflow-y-auto mb-4 flex flex-col gap-2">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`p-3 my-2 rounded-lg max-w-[75%] break-words ${
-                msg.type === "user"
-                  ? "bg-black text-white self-end rounded-br-none"
-                  : "bg-gray-200 text-black self-start rounded-bl-none"
-              }`}
-            >
-              {msg.text}
-            </div>
-          ))}
-          {loading && (
-            <div className="self-start">
-              <Loader />
-            </div>
-          )}
-          <div ref={chatEndRef} />
-        </div>
-
-        {/* Input section */}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1 border-2 rounded-lg p-2 focus:outline-none"
-          />
-          <button
-            onClick={handleSend}
-            className="bg-black text-white px-4 py-2 rounded-lg"
+    <div className="flex flex-col flex-1">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto flex flex-col gap-2 p-4">
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`p-3 rounded-lg max-w-[75%] break-words ${
+              msg.type === "user"
+                ? "bg-black text-white self-end rounded-br-none"
+                : "bg-gray-200 text-black self-start rounded-bl-none"
+            }`}
           >
-            Send
-          </button>
-        </div>
+            {msg.text}
+          </div>
+        ))}
+        {loading && (
+          <div className="self-start">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black" />
+          </div>
+        )}
+        <div ref={chatEndRef} />
       </div>
-        <footer className="text-center text-gray-500 text-sm mt-4 mb-4">
-          © {new Date().getFullYear()} AI Studio. All rights reserved.
-        </footer>
-    </>
+
+      {/* Input + Personality Selector */}
+      <div className="flex gap-2 p-4 border-t bg-white items-center">
+        <select
+          value={personality}
+          onChange={handlePersonalityChange}
+          className="border rounded-lg p-2"
+        >
+          <option value="bestfriend">Best Friend</option>
+          <option value="girlfriend">Girlfriend</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Type a message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+          className="flex-1 border rounded-lg p-2 focus:outline-none"
+        />
+
+        <button
+          onClick={handleSend}
+          className="bg-black text-white px-4 py-2 rounded-lg"
+        >
+          Send
+        </button>
+      </div>
+
+      <footer className="text-center text-gray-400 text-xs py-2 border-t">
+        © {new Date().getFullYear()} AI Studio
+      </footer>
+    </div>
   );
 }
