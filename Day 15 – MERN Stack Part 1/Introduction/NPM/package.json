@@ -1,0 +1,19 @@
+{
+  "name": "npm",
+  "version": "1.0.0",
+  "main": "npm.js",
+  "scripts": {
+    "start": "node npm.js",
+    "dev": "nodemon npm.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "lodash": "^4.17.23"
+  }
+}
