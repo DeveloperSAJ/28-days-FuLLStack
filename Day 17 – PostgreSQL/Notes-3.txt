@@ -1,0 +1,638 @@
+
+
+## ⌨️ What is a Database
+
+A **database** is an organized collection of data stored electronically.
+
+Instead of:
+
+* Excel files
+* Paper records
+* Random JSON files
+
+A database:
+
+* Stores data in structured format
+* Allows fast querying
+* Supports security & multi-user access
+* Ensesses data integrity
+
+---
+
+## ⌨️ What is SQL And Relational Database
+
+### SQL
+
+SQL = **Structured Query Language**
+Used to:
+
+* Create data
+* Read data
+* Update data
+* Delete data
+
+(CRUD operations)
+
+### Relational Database
+
+Data is stored in **tables**
+Tables relate to each other using **keys**
+
+Example:
+
+```
+users table
+orders table
+```
+
+Orders reference users.
+
+---
+
+## ⌨️ What is PostgreSQL (Postgres)
+
+**PostgreSQL**
+
+* Open-source relational database
+* ACID compliant
+* Very powerful
+* Supports JSON, indexing, extensions
+* Used in production systems
+
+---
+
+# PART 2 — Installation & Setup
+
+---
+
+## ⌨️ PostgreSQL Installation (Mac OS)
+
+1. Download installer
+2. Install with default settings
+3. Set password for `postgres` user
+4. Use:
+
+```bash
+psql -U postgres
+```
+
+---
+
+## ⌨️ PostgreSQL Installation (Windows)
+
+1. Download Windows installer
+2. Install PostgreSQL server
+3. Install pgAdmin
+4. Set password
+5. Open SQL Shell (psql)
+
+---
+
+## ⌨️ GUI Clients vs Terminal/CMD Clients
+
+### GUI (pgAdmin)
+
+* Visual interface
+* Easy for beginners
+
+### Terminal (psql)
+
+* Faster
+* More powerful
+* Used by professionals
+
+---
+
+## ⌨️ Setup PSQL (Mac & Windows)
+
+Add PostgreSQL to system PATH.
+
+Test:
+
+```bash
+psql --version
+```
+
+Login:
+
+```bash
+psql -U postgres
+```
+
+---
+
+# PART 3 — Databases
+
+---
+
+## ⌨️ How to Create Database
+
+```sql
+CREATE DATABASE mydb;
+```
+
+---
+
+## ⌨️ How to Connect to Databases
+
+```sql
+\c mydb
+```
+
+---
+
+## ⌨️ A Very Dangerous Command
+
+```sql
+DROP DATABASE mydb;
+```
+
+or
+
+```sql
+DROP TABLE users;
+```
+
+⚠️ Permanently deletes data.
+
+---
+
+# PART 4 — Tables
+
+---
+
+## ⌨️ How To Create Tables
+
+```sql
+CREATE TABLE person (
+    id INT,
+    name TEXT
+);
+```
+
+---
+
+## ⌨️ Creating Tables Without Constraints
+
+Basic structure:
+
+```sql
+CREATE TABLE person (
+    id INT,
+    first_name TEXT,
+    gender TEXT
+);
+```
+
+No validation rules.
+
+---
+
+## ⌨️ Creating Tables with Constraints
+
+```sql
+CREATE TABLE person (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    gender TEXT CHECK (gender IN ('Male','Female'))
+);
+```
+
+Constraints enforce rules.
+
+---
+
+# PART 5 — Insert Data
+
+---
+
+## ⌨️ Insert Into
+
+```sql
+INSERT INTO person (first_name, gender)
+VALUES ('Ali','Male');
+```
+
+---
+
+## ⌨️ Insert Into Example
+
+Multiple rows:
+
+```sql
+INSERT INTO person (first_name, gender)
+VALUES
+('Sara','Female'),
+('John','Male');
+```
+
+---
+
+## ⌨️ Generate 1000 Rows with Mockaroo
+
+Use **Mockaroo**
+
+* Generate fake data
+* Export CSV
+* Import into PostgreSQL
+
+---
+
+# PART 6 — Querying Data
+
+---
+
+## ⌨️ Select From
+
+```sql
+SELECT * FROM person;
+```
+
+---
+
+## ⌨️ Order By
+
+```sql
+SELECT * FROM person
+ORDER BY first_name ASC;
+```
+
+---
+
+## ⌨️ Distinct
+
+```sql
+SELECT DISTINCT gender FROM person;
+```
+
+---
+
+## ⌨️ Where Clause and AND
+
+```sql
+SELECT * FROM person
+WHERE gender = 'Male'
+AND country = 'USA';
+```
+
+---
+
+## ⌨️ Comparison Operators
+
+* `=`
+* `!=`
+* `>`
+* `<`
+* `>=`
+* `<=`
+
+---
+
+## ⌨️ Limit, Offset & Fetch
+
+```sql
+SELECT * FROM person
+LIMIT 10 OFFSET 5;
+```
+
+Pagination.
+
+---
+
+## ⌨️ IN
+
+```sql
+WHERE country IN ('USA','Canada');
+```
+
+---
+
+## ⌨️ Between
+
+```sql
+WHERE age BETWEEN 20 AND 30;
+```
+
+---
+
+## ⌨️ Like And iLike
+
+```sql
+WHERE email LIKE '%gmail.com';
+```
+
+`ILIKE` = case insensitive.
+
+---
+
+# PART 7 — Aggregation
+
+---
+
+## ⌨️ Group By
+
+```sql
+SELECT gender, COUNT(*)
+FROM person
+GROUP BY gender;
+```
+
+---
+
+## ⌨️ Group By Having
+
+```sql
+HAVING COUNT(*) > 10;
+```
+
+Filter grouped results.
+
+---
+
+## ⌨️ Min, Max, Average
+
+```sql
+SELECT MIN(age), MAX(age), AVG(age)
+FROM person;
+```
+
+---
+
+## ⌨️ Sum
+
+```sql
+SELECT SUM(salary) FROM employees;
+```
+
+---
+
+# PART 8 — Calculations
+
+---
+
+## ⌨️ Arithmetic Operators
+
+```sql
+SELECT 10 + 5;
+SELECT salary * 0.10;
+```
+
+---
+
+## ⌨️ ROUND
+
+```sql
+SELECT ROUND(AVG(salary),2);
+```
+
+---
+
+## ⌨️ Alias
+
+```sql
+SELECT first_name AS name FROM person;
+```
+
+---
+
+## ⌨️ Coalesce
+
+```sql
+SELECT COALESCE(phone,'N/A') FROM person;
+```
+
+Handles NULL.
+
+---
+
+## ⌨️ NULLIF
+
+```sql
+SELECT NULLIF(0,0);
+```
+
+Returns NULL if equal.
+
+---
+
+# PART 9 — Dates
+
+---
+
+## ⌨️ Timestamps And Dates
+
+```sql
+SELECT NOW();
+SELECT CURRENT_DATE;
+```
+
+---
+
+## ⌨️ Adding/Subtracting Dates
+
+```sql
+SELECT NOW() + INTERVAL '5 days';
+```
+
+---
+
+## ⌨️ Extract
+
+```sql
+SELECT EXTRACT(YEAR FROM NOW());
+```
+
+---
+
+## ⌨️ Age Function
+
+```sql
+SELECT AGE(date_of_birth);
+```
+
+---
+
+# PART 10 — Keys & Constraints
+
+---
+
+## ⌨️ Primary Keys
+
+Unique identifier per row.
+
+---
+
+## ⌨️ Adding Primary Key
+
+```sql
+ALTER TABLE person
+ADD PRIMARY KEY (id);
+```
+
+---
+
+## ⌨️ Unique Constraints
+
+```sql
+ALTER TABLE person
+ADD UNIQUE (email);
+```
+
+---
+
+## ⌨️ Check Constraints
+
+```sql
+CHECK (age > 0)
+```
+
+---
+
+# PART 11 — Update & Delete
+
+---
+
+## ⌨️ Delete Records
+
+```sql
+DELETE FROM person WHERE id = 5;
+```
+
+---
+
+## ⌨️ Update Records
+
+```sql
+UPDATE person
+SET first_name = 'Ahmed'
+WHERE id = 1;
+```
+
+---
+
+## ⌨️ On Conflict Do Nothing
+
+```sql
+ON CONFLICT (email) DO NOTHING;
+```
+
+---
+
+## ⌨️ Upsert
+
+```sql
+ON CONFLICT (email)
+DO UPDATE SET first_name = EXCLUDED.first_name;
+```
+
+Insert or update.
+
+---
+
+# PART 12 — Relationships
+
+---
+
+## ⌨️ Foreign Keys
+
+```sql
+FOREIGN KEY (user_id)
+REFERENCES users(id);
+```
+
+Connect tables.
+
+---
+
+## ⌨️ Inner Join
+
+```sql
+SELECT *
+FROM orders
+JOIN users
+ON users.id = orders.user_id;
+```
+
+---
+
+## ⌨️ Left Join
+
+```sql
+LEFT JOIN
+```
+
+Returns all left rows.
+
+---
+
+## ⌨️ Deleting With Foreign Keys
+
+Need:
+
+* `ON DELETE CASCADE`
+  or
+* delete child first
+
+---
+
+# PART 13 — Export & Advanced
+
+---
+
+## ⌨️ Export To CSV
+
+```sql
+COPY person TO '/tmp/file.csv' CSV HEADER;
+```
+
+---
+
+## ⌨️ Serial & Sequences
+
+```sql
+id SERIAL PRIMARY KEY
+```
+
+Auto increment.
+
+---
+
+## ⌨️ Extensions
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+Add new features.
+
+---
+
+## ⌨️ UUID Data Type
+
+Universally unique identifier.
+
+---
+
+## ⌨️ UUID as Primary Key
+
+```sql
+id UUID PRIMARY KEY DEFAULT uuid_generate_v4();
+```
+
+Better for distributed systems.
+
+---
+
+# ⌨️ Conclusion
+
+By the end of the course you understand:
+
+* Database fundamentals
+* SQL querying
+* Constraints & validation
+* Relationships & joins
+* Aggregations
+* Date handling
+* UUIDs
+* Real-world data handling
+
