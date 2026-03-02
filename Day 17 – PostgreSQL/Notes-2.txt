@@ -1,0 +1,389 @@
+
+## 📌 1. Introduction to PostgreSQL
+
+**PostgreSQL** is an advanced open-source relational database system.
+
+* Stores and organizes data
+* Uses SQL (Structured Query Language)
+* ACID-compliant and powerful for apps
+
+---
+
+## 📌 2. Installation & Setup
+
+### 🧩 Install PostgreSQL
+
+* Download for **Windows/Mac**
+* Includes `psql` (terminal client) and optionally **pgAdmin GUI**
+
+**Common Setup Commands:**
+
+```bash
+# Start Postgres tool
+psql -U postgres
+```
+
+👉 You log into PostgreSQL with a username and password. ([YouTube][1])
+
+---
+
+## 📌 3. Creating & Connecting to Database
+
+### 📝 Create Database
+
+```sql
+CREATE DATABASE mydb;
+```
+
+### 🔌 Connect to Database
+
+```bash
+\c mydb
+```
+
+### 📜 List Databases
+
+```bash
+\l
+```
+
+👉 These are basic terminal commands in `psql`. ([YouTube][1])
+
+---
+
+## 📌 4. Tables & Columns
+
+### 🧩 Creating a Table
+
+```sql
+CREATE TABLE users (
+    id SERIAL,
+    name TEXT,
+    email TEXT
+);
+```
+
+### 🛠 Adding Constraints
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    price NUMERIC NOT NULL,
+    stock INT DEFAULT 0
+);
+```
+
+### 📦 Data Types
+
+* `TEXT`, `VARCHAR`
+* `INT`, `SERIAL` (auto increment)
+* `NUMERIC`, `BOOLEAN`, etc. ([YouTube][1])
+
+---
+
+## 📌 5. INSERT Data
+
+### 📥 Simple Insert
+
+```sql
+INSERT INTO users (name, email)
+VALUES ('Sara', 'sara@example.com');
+```
+
+---
+
+## 📌 6. SELECT Query (Data Retrieval)
+
+### 📌 Basic Query
+
+```sql
+SELECT * FROM users;
+```
+
+### 🆔 DISTINCT results
+
+```sql
+SELECT DISTINCT name FROM users;
+```
+
+---
+
+## 📌 7. WHERE Clause (Filtering)
+
+### 🔎 Example
+
+```sql
+SELECT * FROM users
+WHERE name = 'Sara';
+```
+
+---
+
+## 📌 8. ORDER BY (Sorting)
+
+```sql
+SELECT * FROM users
+ORDER BY name ASC;
+```
+
+---
+
+## 📌 9. LIMIT & OFFSET (Result Pagination)
+
+```sql
+SELECT * FROM users
+LIMIT 10;
+```
+
+---
+
+## 📌 10. Comparison Operators
+
+Example:
+
+```sql
+SELECT * FROM products
+WHERE price > 20;
+```
+
+---
+
+## 📌 11. BETWEEN
+
+```sql
+SELECT * FROM products
+WHERE price BETWEEN 10 AND 50;
+```
+
+---
+
+## 📌 12. IN Clause
+
+```sql
+SELECT * FROM users
+WHERE name IN ('Sara','Ali');
+```
+
+---
+
+## 📌 13. LIKE / ILIKE (Pattern Matching)
+
+```sql
+SELECT * FROM users
+WHERE name LIKE 'S%';
+```
+
+`ILIKE` is case-insensitive. ([YouTube][1])
+
+---
+
+## 📌 14. Aggregate Functions
+
+Common Functions:
+
+| Function   | Meaning       |
+| ---------- | ------------- |
+| `COUNT(*)` | Count rows    |
+| `AVG(col)` | Average value |
+| `SUM(col)` | Sum of values |
+| `MIN(col)` | Minimum value |
+| `MAX(col)` | Maximum value |
+
+Example:
+
+```sql
+SELECT COUNT(*) FROM users;
+```
+
+---
+
+## 📌 15. GROUP BY & HAVING
+
+### 🧮 Group Rows
+
+```sql
+SELECT age, COUNT(*)
+FROM users
+GROUP BY age;
+```
+
+### 🧩 Filter Groups
+
+```sql
+SELECT age, COUNT(*)
+FROM users
+GROUP BY age
+HAVING COUNT(*) > 1;
+```
+
+---
+
+## 📌 16. Calculations & Functions
+
+### ➕ Arithmetic
+
+```sql
+SELECT price * quantity FROM sales;
+```
+
+### ➕ Alias
+
+```sql
+SELECT name AS username FROM users;
+```
+
+### 🪄 COALESCE
+
+Returns first non-null:
+
+```sql
+SELECT COALESCE(phone, 'None') FROM users;
+```
+
+### 🟦 NULLIF
+
+Returns null if two values are equal:
+
+```sql
+SELECT NULLIF(age, 0);
+```
+
+---
+
+## 📌 17. Date & Time Functions
+
+Examples:
+
+```sql
+SELECT CURRENT_DATE;
+SELECT NOW();
+SELECT EXTRACT(YEAR FROM created_at);
+```
+
+---
+
+## 📌 18. Keys & Constraints
+
+### 🧠 Primary Keys
+
+```sql
+ALTER TABLE users
+ADD PRIMARY KEY (id);
+```
+
+### 🌀 Unique Constraints
+
+```sql
+ALTER TABLE users
+ADD UNIQUE (email);
+```
+
+### 🚫 Check Constraints
+
+```sql
+ALTER TABLE products
+ADD CHECK (price > 0);
+```
+
+---
+
+## 📌 19. UPDATE / DELETE
+
+### 🔄 UPDATE
+
+```sql
+UPDATE users
+SET name = 'Sara Ali'
+WHERE id = 2;
+```
+
+### ❌ DELETE
+
+```sql
+DELETE FROM users
+WHERE id = 3;
+```
+
+---
+
+## 📌 20. UPSERT – `ON CONFLICT`
+
+```sql
+INSERT INTO users (id, name)
+VALUES (1, 'Ali')
+ON CONFLICT (id) DO NOTHING;
+```
+
+---
+
+## 📌 21. Foreign Keys & Relationships
+
+### 🧩 Add Foreign Key
+
+```sql
+ALTER TABLE orders
+ADD CONSTRAINT fk_user
+FOREIGN KEY (user_id)
+REFERENCES users(id);
+```
+
+---
+
+## 📌 22. JOINs (Combine Tables)
+
+### 🔗 INNER JOIN
+
+```sql
+SELECT * FROM users
+JOIN orders
+ON users.id = orders.user_id;
+```
+
+### ➕ LEFT JOIN
+
+```sql
+SELECT * FROM users
+LEFT JOIN orders
+ON users.id = orders.user_id;
+```
+
+---
+
+## 📌 23. Export to CSV
+
+```sql
+COPY users TO '/tmp/users.csv' CSV HEADER;
+```
+
+---
+
+## 📌 24. Sequences & SERIAL
+
+`SERIAL` automatically creates a sequence:
+
+```sql
+CREATE TABLE example (
+    id SERIAL PRIMARY KEY
+);
+```
+
+---
+
+## 📌 25. Extensions
+
+Enable extra features:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+---
+
+## 📌 26. UUID Data Type
+
+```sql
+CREATE TABLE clients (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4()
+);
+```
+

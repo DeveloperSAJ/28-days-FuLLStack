@@ -1,0 +1,395 @@
+## 🐘 What is PostgreSQL?
+
+**PostgreSQL** is an advanced **open-source relational database management system (RDBMS)**.
+
+It is:
+
+* Object-relational (supports complex data types)
+* ACID compliant (safe transactions)
+* Highly extensible
+* Very powerful for large-scale applications
+
+It is commonly used in backend development (Node.js, Django, Rails, etc.).
+
+---
+
+# 📚 PostgreSQL Commands — From Scratch
+
+PostgreSQL commands are mainly grouped into:
+
+1. **DDL** – Data Definition Language
+2. **DML** – Data Manipulation Language
+3. **DCL** – Data Control Language
+4. **TCL** – Transaction Control Language
+5. Utility / Advanced Commands
+
+---
+
+# 1️⃣ DDL – Data Definition Language
+
+(Structure of database)
+
+### 🔹 Create Database
+
+```sql
+CREATE DATABASE mydb;
+```
+
+### 🔹 Drop Database
+
+```sql
+DROP DATABASE mydb;
+```
+
+### 🔹 Create Table
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    age INT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 🔹 Drop Table
+
+```sql
+DROP TABLE users;
+```
+
+### 🔹 Alter Table
+
+Add column:
+
+```sql
+ALTER TABLE users ADD COLUMN email VARCHAR(100);
+```
+
+Drop column:
+
+```sql
+ALTER TABLE users DROP COLUMN email;
+```
+
+Modify column:
+
+```sql
+ALTER TABLE users ALTER COLUMN age TYPE BIGINT;
+```
+
+Rename:
+
+```sql
+ALTER TABLE users RENAME TO customers;
+```
+
+---
+
+# 2️⃣ DML – Data Manipulation Language
+
+(Working with data)
+
+### 🔹 Insert
+
+```sql
+INSERT INTO users (name, age)
+VALUES ('Ali', 25);
+```
+
+Insert multiple:
+
+```sql
+INSERT INTO users (name, age)
+VALUES ('Sara', 22), ('John', 30);
+```
+
+### 🔹 Select
+
+```sql
+SELECT * FROM users;
+```
+
+With condition:
+
+```sql
+SELECT * FROM users WHERE age > 20;
+```
+
+Specific columns:
+
+```sql
+SELECT name, age FROM users;
+```
+
+Sorting:
+
+```sql
+SELECT * FROM users ORDER BY age DESC;
+```
+
+Limit:
+
+```sql
+SELECT * FROM users LIMIT 5;
+```
+
+### 🔹 Update
+
+```sql
+UPDATE users
+SET age = 26
+WHERE name = 'Ali';
+```
+
+### 🔹 Delete
+
+```sql
+DELETE FROM users WHERE age < 18;
+```
+
+---
+
+# 3️⃣ DCL – Data Control Language
+
+(Permissions)
+
+### 🔹 Grant
+
+```sql
+GRANT SELECT, INSERT ON users TO myuser;
+```
+
+### 🔹 Revoke
+
+```sql
+REVOKE INSERT ON users FROM myuser;
+```
+
+---
+
+# 4️⃣ TCL – Transaction Control Language
+
+(Transactions & safety)
+
+### 🔹 Begin Transaction
+
+```sql
+BEGIN;
+```
+
+### 🔹 Commit
+
+```sql
+COMMIT;
+```
+
+### 🔹 Rollback
+
+```sql
+ROLLBACK;
+```
+
+### 🔹 Savepoint
+
+```sql
+SAVEPOINT sp1;
+```
+
+Rollback to savepoint:
+
+```sql
+ROLLBACK TO sp1;
+```
+
+---
+
+# 5️⃣ Indexes
+
+### 🔹 Create Index
+
+```sql
+CREATE INDEX idx_users_name ON users(name);
+```
+
+### 🔹 Unique Index
+
+```sql
+CREATE UNIQUE INDEX idx_users_email ON users(email);
+```
+
+### 🔹 Drop Index
+
+```sql
+DROP INDEX idx_users_name;
+```
+
+---
+
+# 6️⃣ Constraints
+
+Inside `CREATE TABLE`:
+
+* `PRIMARY KEY`
+* `FOREIGN KEY`
+* `UNIQUE`
+* `NOT NULL`
+* `CHECK`
+* `DEFAULT`
+
+Example:
+
+```sql
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    amount DECIMAL(10,2) CHECK (amount > 0)
+);
+```
+
+---
+
+# 7️⃣ Joins
+
+```sql
+SELECT users.name, orders.amount
+FROM users
+JOIN orders ON users.id = orders.user_id;
+```
+
+Types:
+
+* INNER JOIN
+* LEFT JOIN
+* RIGHT JOIN
+* FULL JOIN
+
+---
+
+# 8️⃣ Aggregate Functions
+
+```sql
+SELECT COUNT(*) FROM users;
+SELECT AVG(age) FROM users;
+SELECT SUM(amount) FROM orders;
+SELECT MAX(age) FROM users;
+SELECT MIN(age) FROM users;
+```
+
+With GROUP BY:
+
+```sql
+SELECT age, COUNT(*)
+FROM users
+GROUP BY age;
+```
+
+---
+
+# 9️⃣ Advanced PostgreSQL Features
+
+### 🔹 JSON Support
+
+```sql
+CREATE TABLE products (
+    id SERIAL,
+    data JSONB
+);
+```
+
+### 🔹 Views
+
+```sql
+CREATE VIEW adult_users AS
+SELECT * FROM users WHERE age >= 18;
+```
+
+### 🔹 Materialized View
+
+```sql
+CREATE MATERIALIZED VIEW mv_users AS
+SELECT * FROM users;
+```
+
+### 🔹 Functions
+
+```sql
+CREATE FUNCTION add_numbers(a INT, b INT)
+RETURNS INT AS $$
+BEGIN
+   RETURN a + b;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 🔹 Triggers
+
+```sql
+CREATE TRIGGER trigger_name
+BEFORE INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION my_function();
+```
+
+---
+
+# 🔟 Roles & Users
+
+Create role:
+
+```sql
+CREATE ROLE myuser WITH LOGIN PASSWORD '1234';
+```
+
+Drop role:
+
+```sql
+DROP ROLE myuser;
+```
+
+---
+
+# 1️⃣1️⃣ Backup & Restore
+
+Backup:
+
+```bash
+pg_dump mydb > mydb.sql
+```
+
+Restore:
+
+```bash
+psql mydb < mydb.sql
+```
+
+---
+
+# 🧠 Important System Commands (psql)
+
+List databases:
+
+```sql
+\l
+```
+
+Connect:
+
+```sql
+\c mydb
+```
+
+List tables:
+
+```sql
+\dt
+```
+
+Describe table:
+
+```sql
+\d users
+```
+
+
+
