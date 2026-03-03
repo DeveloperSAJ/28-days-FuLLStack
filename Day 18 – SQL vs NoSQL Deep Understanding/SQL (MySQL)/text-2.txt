@@ -1,0 +1,485 @@
+
+# 🐬 MySQL – Complete Documentation Guide
+
+---
+
+# ⌨️ (0:00) Introduction
+
+MySQL is:
+
+* Open-source Relational Database Management System (RDBMS)
+* Uses SQL (Structured Query Language)
+* Stores data in tables
+* Follows ACID principles (when using InnoDB)
+
+Used in:
+
+* Web applications
+* Enterprise systems
+* E-commerce
+* SaaS products
+
+---
+
+# ⌨️ (2:36) What is a Database?
+
+A **database** is an organized collection of data.
+
+Instead of storing data in:
+
+* Excel files
+* JSON files
+* Text files
+
+We use databases because they provide:
+
+* Structured storage
+* Fast querying
+* Data integrity
+* Security
+* Relationships between data
+
+---
+
+## Types of Databases
+
+1. Relational (SQL) → MySQL
+2. NoSQL → MongoDB, Firebase
+3. In-memory → Redis
+
+---
+
+# ⌨️ (23:10) Tables & Keys
+
+## 🔹 Tables
+
+Tables consist of:
+
+* Rows (records)
+* Columns (fields)
+
+Example:
+
+| id | name | email |
+| -- | ---- | ----- |
+
+---
+
+## 🔹 Primary Key
+
+* Uniquely identifies each row
+* Cannot be NULL
+* Must be unique
+
+```sql
+PRIMARY KEY (id)
+```
+
+---
+
+## 🔹 Foreign Key
+
+* Links one table to another
+* Creates relationships
+
+```sql
+FOREIGN KEY (user_id) REFERENCES users(id)
+```
+
+---
+
+## 🔹 Composite Key
+
+Multiple columns combined as primary key.
+
+---
+
+# ⌨️ (43:31) SQL Basics
+
+SQL has 4 major categories:
+
+1. DDL – Data Definition Language
+
+   * CREATE
+   * DROP
+   * ALTER
+
+2. DML – Data Manipulation Language
+
+   * INSERT
+   * UPDATE
+   * DELETE
+
+3. DQL – Data Query Language
+
+   * SELECT
+
+4. DCL – Data Control Language
+
+   * GRANT
+   * REVOKE
+
+---
+
+# ⌨️ (52:26) MySQL Windows Installation
+
+1. Download MySQL Installer
+2. Choose:
+
+   * MySQL Server
+   * MySQL Workbench
+3. Configure:
+
+   * Root password
+   * Port (default 3306)
+4. Start MySQL service
+5. Connect via Workbench or CLI
+
+---
+
+# ⌨️ (1:01:59) MySQL Mac Installation
+
+1. Download DMG installer
+2. Install server
+3. Set root password
+4. Add MySQL to PATH
+5. Connect via:
+
+```bash
+mysql -u root -p
+```
+
+---
+
+# ⌨️ (1:15:49) Creating Tables
+
+```sql
+CREATE DATABASE company;
+USE company;
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    birth_date DATE,
+    salary DECIMAL(10,2)
+);
+```
+
+---
+
+# ⌨️ (1:31:05) Inserting Data
+
+```sql
+INSERT INTO employees 
+(first_name, last_name, birth_date, salary)
+VALUES
+('Ali', 'Khan', '1998-03-10', 50000),
+('Sara', 'Ahmed', '1995-06-20', 60000);
+```
+
+---
+
+# ⌨️ (1:38:17) Constraints
+
+Types:
+
+* NOT NULL
+* UNIQUE
+* PRIMARY KEY
+* FOREIGN KEY
+* CHECK
+* DEFAULT
+
+Example:
+
+```sql
+salary DECIMAL(10,2) NOT NULL CHECK (salary > 0)
+```
+
+---
+
+# ⌨️ (1:48:11) Update & Delete
+
+## Update
+
+```sql
+UPDATE employees
+SET salary = 65000
+WHERE emp_id = 2;
+```
+
+## Delete
+
+```sql
+DELETE FROM employees
+WHERE emp_id = 1;
+```
+
+⚠️ Always use WHERE.
+
+---
+
+# ⌨️ (1:56:11) Basic Queries
+
+```sql
+SELECT * FROM employees;
+SELECT first_name, salary FROM employees;
+```
+
+Filtering:
+
+```sql
+SELECT * FROM employees
+WHERE salary > 50000;
+```
+
+Sorting:
+
+```sql
+ORDER BY salary DESC;
+```
+
+Limiting:
+
+```sql
+LIMIT 5;
+```
+
+---
+
+# ⌨️ (2:08:37) Company Database Intro
+
+We design:
+
+* employees
+* departments
+* clients
+* branches
+* works_with
+
+Goal:
+Understand relationships & foreign keys.
+
+---
+
+# ⌨️ (2:14:05) Creating Company Database
+
+Example:
+
+```sql
+CREATE TABLE branch (
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    mgr_id INT,
+    FOREIGN KEY (mgr_id) REFERENCES employees(emp_id)
+);
+```
+
+---
+
+# ⌨️ (2:30:27) More Basic Queries
+
+Aggregation:
+
+```sql
+SELECT COUNT(*) FROM employees;
+SELECT AVG(salary) FROM employees;
+SELECT SUM(salary) FROM employees;
+```
+
+Group By:
+
+```sql
+SELECT branch_id, COUNT(*)
+FROM employees
+GROUP BY branch_id;
+```
+
+---
+
+# ⌨️ (2:26:24) Functions
+
+Built-in Functions:
+
+## Aggregate
+
+* COUNT()
+* SUM()
+* AVG()
+* MIN()
+* MAX()
+
+## String
+
+* UPPER()
+* LOWER()
+* LENGTH()
+
+## Date
+
+* NOW()
+* CURDATE()
+
+Example:
+
+```sql
+SELECT UPPER(first_name) FROM employees;
+```
+
+---
+
+# ⌨️ (2:45:13) Wildcards
+
+Used with LIKE:
+
+* % → any characters
+* _ → single character
+
+Example:
+
+```sql
+SELECT * FROM employees
+WHERE first_name LIKE 'A%';
+```
+
+---
+
+# ⌨️ (2:53:53) UNION
+
+Combine results of multiple SELECT statements.
+
+```sql
+SELECT first_name FROM employees
+UNION
+SELECT branch_name FROM branch;
+```
+
+Rules:
+
+* Same number of columns
+* Compatible data types
+
+---
+
+# ⌨️ (3:01:36) Joins
+
+## INNER JOIN
+
+```sql
+SELECT employees.first_name, branch.branch_name
+FROM employees
+JOIN branch
+ON employees.branch_id = branch.branch_id;
+```
+
+## LEFT JOIN
+
+Returns all left table rows.
+
+## RIGHT JOIN
+
+Returns all right table rows.
+
+---
+
+# ⌨️ (3:11:49) Nested Queries (Subqueries)
+
+Query inside query.
+
+Example:
+
+```sql
+SELECT first_name
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary) FROM employees
+);
+```
+
+---
+
+# ⌨️ (3:21:52) ON DELETE
+
+Used with foreign keys.
+
+```sql
+FOREIGN KEY (branch_id)
+REFERENCES branch(branch_id)
+ON DELETE CASCADE;
+```
+
+Options:
+
+* CASCADE
+* SET NULL
+* RESTRICT
+* NO ACTION
+
+---
+
+# ⌨️ (3:30:05) Triggers
+
+Automatically execute SQL when event happens.
+
+Example:
+
+```sql
+CREATE TRIGGER before_insert_employee
+BEFORE INSERT ON employees
+FOR EACH ROW
+SET NEW.salary = IFNULL(NEW.salary, 30000);
+```
+
+---
+
+# ⌨️ (3:42:12) ER Diagrams Intro
+
+ER = Entity Relationship Diagram
+
+Used to:
+
+* Design database visually
+* Show tables and relationships
+
+Symbols:
+
+* Rectangle → Entity
+* Diamond → Relationship
+* Oval → Attribute
+
+---
+
+# ⌨️ (3:55:53) Designing an ER Diagram
+
+Steps:
+
+1. Identify entities (Employee, Branch)
+2. Identify attributes
+3. Define primary keys
+4. Define relationships
+5. Define cardinality (1:1, 1:M, M:N)
+
+---
+
+# ⌨️ (4:08:34) Converting ER Diagrams to Schemas
+
+Rules:
+
+1. Entity → Table
+2. Attribute → Column
+3. Primary key → PRIMARY KEY
+4. 1:M → Foreign key in "many" table
+5. M:N → Create junction table
+
+Example M:N:
+
+```sql
+CREATE TABLE works_with (
+    emp_id INT,
+    client_id INT,
+    PRIMARY KEY (emp_id, client_id),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+    FOREIGN KEY (client_id) REFERENCES clients(client_id)
+);
+```
