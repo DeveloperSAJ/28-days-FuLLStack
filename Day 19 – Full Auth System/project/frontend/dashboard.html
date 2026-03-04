@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Your App</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="dashboard-container container">
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>AuthSystem</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </nav>
+
+        <div id="alertContainer"></div>
+
+        <div class="dashboard-content">
+            <div class="welcome-card" id="welcomeCard">
+                <h1>Loading your dashboard...</h1>
+                <div class="spinner"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Profile Views</h3>
+                        <p>1,234</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Projects</h3>
+                        <p>12</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Hours Saved</h3>
+                        <p>168</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Fetch user profile
+            const result = await Auth.getProfile();
+            
+            if (result.success) {
+                const user = result.user;
+                document.getElementById('welcomeCard').innerHTML = `
+                    <h1>Welcome back, ${user.username}! </h1>
+                    <p>We're glad to see you again. Here's what's happening with your account today.</p>
+                    <div style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 10px;">
+                        <p><i class="fas fa-envelope" style="color: #4f46e5;"></i> <strong>Email:</strong> ${user.email}</p>
+                        <p><i class="fas fa-user-tag" style="color: #4f46e5;"></i> <strong>Role:</strong> ${user.role}</p>
+                        <p><i class="fas fa-calendar" style="color: #4f46e5;"></i> <strong>Member since:</strong> ${new Date(user.created_at).toLocaleDateString()}</p>
+                    </div>
+                `;
+            } else {
+                showAlert('error', result.message);
+                if (result.message.includes('token')) {
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                }
+            }
+        });
+
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="fas ${icon}"></i>
+                    ${message}
+                </div>
+            `;
+        }
+
+        function logout() {
+            Auth.logout();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
