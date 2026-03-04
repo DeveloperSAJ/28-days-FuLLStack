@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Your App</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .landing-container {
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .hero-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .hero-section h1 {
+            font-size: 48px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-section p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            padding: 20px;
+        }
+        
+        .feature i {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container container">
+        <div class="hero-section">
+            <h1>Welcome to AuthSystem</h1>
+            <p>A modern, secure authentication system built with JWT, Node.js, and PostgreSQL. Experience seamless and secure user management.</p>
+            
+            <div class="cta-buttons">
+                <a href="login.html" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </a>
+                <a href="register.html" class="btn-outline">
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                </a>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure JWT Auth</h3>
+                    <p>Industry-standard JWT tokens for secure authentication</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-database"></i>
+                    <h3>PostgreSQL</h3>
+                    <p>Robust and reliable database management</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fast & Responsive</h3>
+                    <p>Optimized performance with modern UI</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-footer">
+            <p>&copy; 2024 AuthSystem. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is already logged in
+        if (localStorage.getItem('token')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
