@@ -1,0 +1,558 @@
+===============================================================================
+                  ADVANCED GIT GUIDE - PART 3: ADVANCED TECHNIQUES
+===============================================================================
+
+TABLE OF CONTENTS:
+------------------
+9. Cherry-picking
+10. Bisect
+11. Reflog
+12. Merge Strategies
+13. Configuration & Best Practices
+===============================================================================
+
+
+
+
+===============================================================================
+9. CHERRY-PICKING
+===============================================================================
+
+Cherry-picking applies specific commits from one branch to another.
+
+BASIC CHERRY-PICK COMMANDS:
+-------------------------------------------------------------------------------
+# Pick a single commit
+git cherry-pick <commit-hash>
+
+# Pick multiple commits
+git cherry-pick <hash1> <hash2> <hash3>
+
+# Pick a range of commits
+git cherry-pick A..B        # Excludes A, includes B
+git cherry-pick A^..B       # Includes A, includes B
+git cherry-pick main~5..main~2  # Pick specific range
+-------------------------------------------------------------------------------
+
+CHERRY-PICK OPTIONS:
+-------------------------------------------------------------------------------
+git cherry-pick -e <hash>           # Edit commit message
+git cherry-pick -n <hash>           # No commit (stage only)
+git cherry-pick -x <hash>           # Add "cherry picked from" note
+git cherry-pick --signoff           # Add Signed-off-by line
+git cherry-pick --ff                 # Fast-forward if possible
+
+# Cherry-pick with custom author
+git cherry-pick --author="Name <email>" <hash>
+-------------------------------------------------------------------------------
+
+CHERRY-PICK WORKFLOW:
+-------------------------------------------------------------------------------
+# Example: Apply bug fix to multiple branches
+git checkout release-v1
+git cherry-pick -x <bugfix-commit>
+
+git checkout release-v2
+git cherry-pick -x <bugfix-commit>
+
+# Cherry-pick merge commits (need -m to specify parent)
+git cherry-pick -m 1 <merge-commit>   # -m 1 = first parent
+git cherry-pick -m 2 <merge-commit>   # -m 2 = second parent
+-------------------------------------------------------------------------------
+
+RESOLVING CHERRY-PICK CONFLICTS:
+-------------------------------------------------------------------------------
+# When conflicts occur
+git status                            # See conflicted files
+# Fix conflicts manually
+git add .
+git cherry-pick --continue
+
+# Abort cherry-pick
+git cherry-pick --abort
+
+# Skip current commit
+git cherry-pick --skip
+-------------------------------------------------------------------------------
+
+ADVANCED CHERRY-PICK EXAMPLES:
+-------------------------------------------------------------------------------
+# Cherry-pick from another branch
+git cherry-pick feature-branch~3 feature-branch~1
+
+# Cherry-pick and keep original committer
+git cherry-pick -x --signoff <hash>
+
+# Cherry-pick multiple commits with one command
+git cherry-pick $(git rev-list --reverse A..B)
+
+# Cherry-pick but don't commit (for testing)
+git cherry-pick -n <hash>
+git reset                               # Unstage if needed
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+10. BISECT
+===============================================================================
+
+Bisect uses binary search to find which commit introduced a bug.
+
+BASIC BISECT WORKFLOW:
+-------------------------------------------------------------------------------
+# Start bisect session
+git bisect start
+
+# Mark current version as bad
+git bisect bad                          # Current HEAD is bad
+
+# Mark known good commit
+git bisect good <commit-hash>           # Last known good version
+
+# Git will checkout a commit in the middle
+# Test it and mark:
+git bisect good                          # If this commit is good
+git bisect bad                           # If this commit is bad
+
+# Continue until culprit is found
+# Git will show the first bad commit
+
+# End bisect session
+git bisect reset
+-------------------------------------------------------------------------------
+
+BISECT WITH SPECIFIED RANGE:
+-------------------------------------------------------------------------------
+# Start with specific range
+git bisect start <bad-commit> <good-commit>
+git bisect start HEAD v1.0              # Current HEAD bad, tag v1.0 good
+
+# Start with no checkout
+git bisect start --no-checkout <bad> <good>
+git bisect run <script>                  # Will handle checkout
+-------------------------------------------------------------------------------
+
+AUTOMATED BISECT:
+-------------------------------------------------------------------------------
+# Create test script (test.sh)
+#!/bin/bash
+npm test                                 # Return 0 if good, non-0 if bad
+
+# Run automated bisect
+git bisect start HEAD v1.0
+git bisect run ./test.sh
+
+# With custom script
+git bisect start HEAD v1.0
+git bisect run python test.py
+
+# Complex test command
+git bisect run sh -c "make && make test"
+-------------------------------------------------------------------------------
+
+BISECT COMMANDS:
+-------------------------------------------------------------------------------
+git bisect log                           # Show bisect log
+git bisect replay <file>                  # Replay bisect from log
+git bisect visualize                      # Visualize with gitk
+git bisect view                           # Same as visualize
+git bisect reset <commit>                  # Reset to specific commit
+-------------------------------------------------------------------------------
+
+BISECT SKIP (for untestable commits):
+-------------------------------------------------------------------------------
+# Skip a commit that can't be tested
+git bisect skip
+
+# Skip range
+git bisect skip <hash1>..<hash2>
+
+# Visualize and skip
+git bisect visualize
+# Then manually skip problematic commits
+-------------------------------------------------------------------------------
+
+BISECT EXAMPLES:
+-------------------------------------------------------------------------------
+# Find where performance degraded
+git bisect start HEAD v1.0
+git bisect run ./benchmark.sh
+
+# Find where test started failing
+git bisect start HEAD v1.0
+git bisect run npm run test:single specific-test
+
+# Debug with custom criteria
+git bisect start HEAD v1.0
+git bisect run grep -q "ERROR" server.log
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+11. REFLOG
+===============================================================================
+
+Reflog is Git's safety net - records all reference updates (HEAD, branches).
+
+BASIC REFLOG COMMANDS:
+-------------------------------------------------------------------------------
+# View reflog
+git reflog                               # Show HEAD reflog
+git reflog show HEAD                      # Same as above
+git reflog show main                       # Show main branch reflog
+
+# View specific time range
+git reflog --since="1 day ago"
+git reflog --until="yesterday"
+git reflog --date=local                    # Show with local dates
+-------------------------------------------------------------------------------
+
+REFLOG REFERENCES:
+-------------------------------------------------------------------------------
+# Format: <reference>@{<qualifier>}
+HEAD@{0}            # Current HEAD position
+HEAD@{5}            # 5th previous HEAD position
+HEAD@{yesterday}    # HEAD position yesterday
+HEAD@{2.hours.ago}  # HEAD position 2 hours ago
+main@{1}            # Previous main branch position
+main@{0}            # Current main branch position
+-------------------------------------------------------------------------------
+
+RECOVERING WITH REFLOG:
+-------------------------------------------------------------------------------
+# 1. Recover deleted branch
+git reflog                                 # Find the commit hash
+git checkout -b recovered-branch <hash>
+
+# 2. Recover after bad reset
+git reflog                                 # Find state before reset
+git reset --hard HEAD@{2}                   # Restore to that state
+
+# 3. Recover lost commits
+git reflog                                 # Find commit hash
+git cherry-pick <hash>                      # Cherry-pick lost commit
+
+# 4. View history of a branch
+git reflog show feature-branch
+-------------------------------------------------------------------------------
+
+REFLOG EXPIRY AND CLEANUP:
+-------------------------------------------------------------------------------
+# Set reflog expiration
+git config gc.reflogExpire "30.days"
+git config gc.reflogExpireUnreachable "30.days"
+
+# Manually expire reflog
+git reflog expire --expire=30.days --all
+
+# Clean up unreachable objects
+git reflog expire --expire-unreachable=now --all
+git gc --prune=now
+-------------------------------------------------------------------------------
+
+PRACTICAL REFLOG SCENARIOS:
+-------------------------------------------------------------------------------
+# Scenario 1: Accidentally deleted feature branch
+git reflog                                 # Find last commit of branch
+git branch feature-backup <hash>            # Restore branch
+
+# Scenario 2: Wrong rebase that broke things
+git reflog                                 # Find state before rebase
+git reset --hard HEAD@{10}                  # Go back to before rebase
+
+# Scenario 3: Lost uncommitted work
+git reflog                                 # Look for stash or temp commits
+git show HEAD@{5}                           # Inspect the state
+git checkout HEAD@{5} -- .                  # Restore files
+
+# Scenario 4: Find when branch was created
+git reflog --format='%C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs' main
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+12. MERGE STRATEGIES
+===============================================================================
+
+Git provides different merge strategies for different situations.
+
+MERGE STRATEGIES:
+-------------------------------------------------------------------------------
+# Recursive (default for non-fast-forward)
+git merge -s recursive feature
+git merge -s recursive -X patience feature  # With patience diff
+git merge -s recursive -X theirs feature    # Auto-resolve using theirs
+
+# Resolve (simple 3-way merge)
+git merge -s resolve feature
+
+# Octopus (for merging multiple branches)
+git merge -s octopus branch1 branch2 branch3
+
+# Ours (keep our version)
+git merge -s ours feature                    # Ignores feature changes
+git merge -s ours --no-commit feature        # But stage feature changes
+
+# Subtree (for subproject merges)
+git merge -s subtree feature
+-------------------------------------------------------------------------------
+
+MERGE OPTIONS:
+-------------------------------------------------------------------------------
+# No fast-forward (always create merge commit)
+git merge --no-ff feature
+
+# Fast-forward only (fail if not possible)
+git merge --ff-only feature
+
+# Squash merge (combine all changes into one commit)
+git merge --squash feature
+git commit -m "feat: add feature X"
+
+# No commit (stage changes only)
+git merge --no-commit feature
+
+# Verify before commit
+git merge --no-commit --no-ff feature
+git diff --cached
+git merge --abort  # If not satisfied
+-------------------------------------------------------------------------------
+
+MERGE CONFLICT RESOLUTION:
+-------------------------------------------------------------------------------
+# When conflicts occur:
+git status                                 # See conflicted files
+
+# Use different strategies per file
+git checkout --ours file.txt                # Keep our version
+git checkout --theirs file.txt              # Keep their version
+
+# Use merge tool
+git mergetool                               # Open configured merge tool
+git mergetool --tool=vimdiff                 # Use specific tool
+
+# After resolving
+git add .
+git commit                                   # Complete merge
+-------------------------------------------------------------------------------
+
+MERGE CONFIGURATION:
+-------------------------------------------------------------------------------
+# Set merge tool
+git config --global merge.tool vimdiff
+git config --global mergetool.keepBackup false
+
+# Conflict style
+git config --global merge.conflictStyle diff3  # Shows base version too
+
+# Auto-resolve strategies
+git config --global merge.ff false           # Always create merge commits
+git config --global pull.ff only             # Only fast-forward on pull
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+13. CONFIGURATION & BEST PRACTICES
+===============================================================================
+
+GIT CONFIGURATION (Advanced):
+-------------------------------------------------------------------------------
+# Set user info
+git config --global user.name "Your Name"
+git config --global user.email "email@example.com"
+
+# Useful aliases
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.unstage 'reset HEAD --'
+git config --global alias.last 'log -1 HEAD'
+git config --global alias.visual '!gitk'
+git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+git config --global alias.tree "log --graph --oneline --all --decorate"
+
+# Colors
+git config --global color.ui auto
+git config --global color.status.changed "red"
+git config --global color.status.added "green"
+git config --global color.status.untracked "cyan"
+git config --global color.diff.new "green bold"
+git config --global color.diff.old "red bold"
+
+# Merge and diff tools
+git config --global merge.tool vimdiff
+git config --global diff.tool vimdiff
+git config --global difftool.prompt false
+
+# Core settings
+git config --global core.editor "vim"
+git config --global core.autocrlf input      # Linux/Mac
+git config --global core.autocrlf true       # Windows
+git config --global core.safecrlf true
+git config --global core.ignorecase false
+
+# Performance
+git config --global core.preloadindex true
+git config --global core.fscache true        # Windows
+git config --global gc.auto 256
+-------------------------------------------------------------------------------
+
+GIT ATTRIBUTES (.gitattributes):
+-------------------------------------------------------------------------------
+# File: .gitattributes
+
+# Text vs binary
+*.txt   text
+*.jpg   binary
+*.png   binary
+*.pdf   binary
+
+# Line endings
+*.sh    text eol=lf
+*.bat   text eol=crlf
+*.js    text eol=lf
+
+# Diff settings
+*.java diff=java
+*.py   diff=python
+*.json diff=json
+*.md   diff=markdown
+
+# Merge strategies
+*.lock -merge        # Don't merge lock files
+package.json merge=union
+-------------------------------------------------------------------------------
+
+GIT IGNORE PATTERNS (.gitignore):
+-------------------------------------------------------------------------------
+# Dependencies
+node_modules/
+vendor/
+.env
+
+# Build outputs
+dist/
+build/
+*.exe
+*.dll
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS files
+.DS_Store
+Thumbs.db
+-------------------------------------------------------------------------------
+
+BEST PRACTICES:
+-------------------------------------------------------------------------------
+1. COMMIT BEST PRACTICES:
+   • Commit early, commit often
+   • One logical change per commit
+   • Write clear commit messages
+   • Don't commit generated files
+   • Test before committing
+
+2. BRANCHING BEST PRACTICES:
+   • One feature/fix per branch
+   • Delete merged branches
+   • Use consistent naming
+   • Keep main branch deployable
+
+3. REBASE BEST PRACTICES:
+   • Only rebase local branches
+   • Never rebase shared branches
+   • Use interactive rebase to clean history
+   • Always use --force-with-lease
+
+4. PULL REQUEST BEST PRACTICES:
+   • Keep PRs small and focused
+   • Add descriptive descriptions
+   • Respond to feedback promptly
+   • Update PR with main regularly
+
+5. GENERAL BEST PRACTICES:
+   • Pull before pushing
+   • Review changes before committing
+   • Tag releases
+   • Backup remotes
+   • Use .gitignore wisely
+-------------------------------------------------------------------------------
+
+QUICK REFERENCE CARD:
+-------------------------------------------------------------------------------
+# Most Used Advanced Commands:
+
+# Interactive rebase
+git rebase -i HEAD~3
+
+# Safe force push
+git push --force-with-lease
+
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Undo last commit (discard changes)
+git reset --hard HEAD~1
+
+# Revert commit
+git revert HEAD
+
+# Stash with message
+git stash save "message"
+
+# Apply stash
+git stash pop
+
+# View reflog
+git reflog
+
+# Clean untracked
+git clean -fd
+
+# Cherry-pick commit
+git cherry-pick <hash>
+
+# Bisect start
+git bisect start
+git bisect bad
+git bisect good <hash>
+
+# View commit tree
+git log --graph --oneline --all --decorate
+
+# Show changes in PR
+git log --oneline origin/main..
+git diff origin/main
+-------------------------------------------------------------------------------
+
+TROUBLESHOOTING QUICK REFERENCE:
+-------------------------------------------------------------------------------
+Problem                          | Solution
+---------------------------------|-----------------------------------------------
+Accidentally deleted branch      | git reflog → git branch new-branch <hash>
+Wrong reset --hard               | git reflog → git reset --hard HEAD@{n}
+Conflicts during rebase          | Fix → git add → git rebase --continue
+Need to undo merge               | git reset --hard ORIG_HEAD
+Committed to wrong branch        | git reset HEAD~ → git stash → git checkout right-branch → git stash pop
+Need to remove file from Git     | git rm --cached file.txt
+Need to ignore already tracked   | git rm --cached file.txt → add to .gitignore
+Remote has commits I don't want  | git pull --rebase → fix conflicts
+-------------------------------------------------------------------------------

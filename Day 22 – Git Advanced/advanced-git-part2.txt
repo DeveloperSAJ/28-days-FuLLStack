@@ -1,0 +1,477 @@
+===============================================================================
+                  ADVANCED GIT GUIDE - PART 2: WORKFLOWS
+===============================================================================
+
+TABLE OF CONTENTS:
+------------------
+5. Pull Request Workflow
+6. Advanced Commands
+7. Git Hooks
+8. Submodules
+===============================================================================
+
+
+
+
+===============================================================================
+5. PULL REQUEST WORKFLOW
+===============================================================================
+
+COMPLETE PR WORKFLOW (Step by Step):
+-------------------------------------------------------------------------------
+
+STEP 1: Start New Feature
+-------------------------------------------------------------------------------
+# Update main branch
+git checkout main
+git pull origin main
+git fetch --prune                      # Clean up deleted remote branches
+
+# Create feature branch
+git checkout -b feature/awesome-feature
+# or
+git switch -c feature/awesome-feature
+
+# Work on feature with regular commits
+git add .
+git commit -m "feat: add login component"
+git commit -m "feat: add validation logic"
+-------------------------------------------------------------------------------
+
+STEP 2: Keep Branch Updated During Development
+-------------------------------------------------------------------------------
+# Option A: Rebase workflow (Recommended for clean history)
+git fetch origin
+git rebase origin/main
+
+# Option B: Merge workflow (Alternative)
+git fetch origin
+git merge origin/main
+
+# If conflicts occur during rebase:
+git status                              # See conflicted files
+# Fix conflicts manually
+git add .
+git rebase --continue
+
+# If stuck, you can abort
+git rebase --abort
+-------------------------------------------------------------------------------
+
+STEP 3: Prepare and Clean Up Before PR
+-------------------------------------------------------------------------------
+# Review your changes
+git log --oneline origin/main..         # See your commits
+git diff origin/main                    # See total changes
+git show --stat                         # Show stats of last commit
+
+# Interactive rebase to clean up commits
+git rebase -i origin/main
+# In editor: squash fixup commits, reword messages
+
+# Verify everything is ready
+git status
+git log --oneline -5
+-------------------------------------------------------------------------------
+
+STEP 4: Push and Create PR
+-------------------------------------------------------------------------------
+# Push branch to remote (first time)
+git push -u origin feature/awesome-feature
+
+# If you rebased after previous push (force push needed)
+git push --force-with-lease origin feature/awesome-feature
+# NEVER use --force alone, always use --force-with-lease
+
+# Create PR via GitHub CLI
+gh pr create --title "Awesome Feature" --body "Description" --base main
+
+# Or via web browser (after push, GitHub shows link)
+-------------------------------------------------------------------------------
+
+STEP 5: Handle Review Feedback
+-------------------------------------------------------------------------------
+# Make requested changes
+git add .
+git commit -m "fix: review feedback - update validation"
+
+# Push changes
+git push
+
+# If feedback requires history changes (amend last commit)
+git add .
+git commit --amend
+git push --force-with-lease
+
+# If feedback requires multiple new commits, that's fine
+# They can be squashed later during merge
+-------------------------------------------------------------------------------
+
+STEP 6: Final Update Before Merge
+-------------------------------------------------------------------------------
+# Get latest from main
+git fetch origin
+git rebase origin/main
+
+# Final push
+git push --force-with-lease
+
+# If using GitHub, you can also update via web interface
+-------------------------------------------------------------------------------
+
+STEP 7: Merge PR
+-------------------------------------------------------------------------------
+# Via GitHub interface, choose merge method:
+# 1. Create merge commit (preserves all commits)
+# 2. Squash and merge (combines all into one commit)
+# 3. Rebase and merge (linear history with individual commits)
+
+# Or via command line after approval:
+git checkout main
+git pull origin main
+git merge --ff-only feature/awesome-feature
+git push origin main
+-------------------------------------------------------------------------------
+
+STEP 8: Clean Up
+-------------------------------------------------------------------------------
+# Delete branch locally
+git branch -d feature/awesome-feature
+
+# Delete remote branch
+git push origin --delete feature/awesome-feature
+
+# Update local main
+git checkout main
+git pull origin main
+
+# Prune remote tracking branches
+git remote prune origin
+-------------------------------------------------------------------------------
+
+PR BRANCH NAMING CONVENTIONS:
+-------------------------------------------------------------------------------
+feature/description          # New features (feature/user-authentication)
+bugfix/issue-description     # Bug fixes (bugfix/login-error-123)
+hotfix/critical-fix          # Urgent fixes (hotfix/security-patch)
+release/version              # Release branches (release/v1.2.0)
+chore/task-description       # Maintenance (chore/update-dependencies)
+docs/description             # Documentation (docs/api-update)
+test/description             # Test additions (test/integration-tests)
+-------------------------------------------------------------------------------
+
+COMMIT MESSAGE CONVENTION:
+-------------------------------------------------------------------------------
+Format: <type>(<scope>): <subject>
+
+Types:
+• feat:     New feature
+• fix:      Bug fix
+• docs:     Documentation
+• style:    Formatting
+• refactor: Code restructuring
+• test:     Adding tests
+• chore:    Maintenance
+
+Examples:
+feat(auth): add OAuth2 login functionality
+fix(api): handle null response from server
+docs(readme): update installation instructions
+-------------------------------------------------------------------------------
+
+PR SCENARIOS AND SOLUTIONS:
+-------------------------------------------------------------------------------
+
+Scenario 1: PR has conflicts
+-------------------------------------------------------------------------------
+git checkout feature-branch
+git fetch origin
+git rebase origin/main
+# Fix conflicts
+git add .
+git rebase --continue
+git push --force-with-lease
+-------------------------------------------------------------------------------
+
+Scenario 2: Need to update PR with changes from main
+-------------------------------------------------------------------------------
+git fetch origin
+git rebase origin/main
+git push --force-with-lease
+-------------------------------------------------------------------------------
+
+Scenario 3: Accidentally committed to main
+-------------------------------------------------------------------------------
+git checkout -b feature/new-branch      # Create branch from main
+git checkout main
+git reset --hard origin/main             # Reset main to remote
+git checkout feature/new-branch
+# Continue with PR
+-------------------------------------------------------------------------------
+
+Scenario 4: Multiple people working on same feature branch
+-------------------------------------------------------------------------------
+# Always pull before pushing
+git pull --rebase origin feature-branch
+# If you have local commits, they'll be reapplied
+git push
+-------------------------------------------------------------------------------
+
+Scenario 5: Need to split PR into multiple PRs
+-------------------------------------------------------------------------------
+# Create new branches from different points
+git checkout -b part1 <commit-hash>
+git checkout -b part2 <later-commit-hash>
+# Push both separately
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+6. ADVANCED COMMANDS
+===============================================================================
+
+RESET COMMAND (Deep Dive):
+-------------------------------------------------------------------------------
+# Three forms of reset:
+git reset --soft HEAD~1    # Move HEAD only, keep changes staged
+git reset --mixed HEAD~1   # Default - move HEAD, unstage changes
+git reset --hard HEAD~1    # Move HEAD, discard all changes
+
+# Reset to specific states:
+git reset --hard origin/main           # Match remote exactly
+git reset --hard HEAD~3                # Go back 3 commits
+git reset --soft HEAD@{2}              # Go to reflog entry, keep changes
+git reset <file>                       # Unstage file (like git rm --cached)
+
+# Reset by path (doesn't move HEAD)
+git reset --hard HEAD -- file.txt      # Reset file to HEAD version
+git reset --soft HEAD~1 -- file.txt    # Reset file to previous commit
+-------------------------------------------------------------------------------
+
+REVERT COMMAND:
+-------------------------------------------------------------------------------
+# Revert creates new commits that undo changes
+git revert HEAD                        # Revert last commit
+git revert <commit-hash>                # Revert specific commit
+git revert HEAD~3..HEAD                 # Revert range of commits
+git revert -n <commit-hash>             # Revert without committing
+git revert --abort                       # Abort revert in progress
+-------------------------------------------------------------------------------
+
+STASH COMMAND (Advanced):
+-------------------------------------------------------------------------------
+# Basic stash
+git stash                               # Stash tracked files
+git stash save "WIP: feature login"     # Stash with message
+git stash -u                             # Stash untracked files too
+git stash -a                             # Stash ignored files too
+
+# List and inspect stashes
+git stash list                           # List all stashes
+git stash show stash@{0}                 # Show files in stash
+git stash show -p stash@{0}              # Show full diff
+
+# Apply stashes
+git stash pop                            # Apply and drop
+git stash apply                          # Apply but keep
+git stash apply stash@{2}                # Apply specific stash
+git stash branch new-branch stash@{0}    # Create branch from stash
+
+# Interactive stash
+git stash --patch                        # Select hunks to stash
+
+# Clean up stashes
+git stash drop stash@{0}                  # Drop specific stash
+git stash clear                           # Drop all stashes
+-------------------------------------------------------------------------------
+
+CLEAN COMMAND:
+-------------------------------------------------------------------------------
+git clean -n              # Dry run - show what would be removed
+git clean -f              # Force remove untracked files
+git clean -fd             # Remove untracked files and directories
+git clean -fx             # Remove ignored files too
+git clean -ffd            # Force remove even with .gitignore
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+7. GIT HOOKS
+===============================================================================
+
+Git hooks are scripts that run automatically on certain events.
+Located in: .git/hooks/
+
+CLIENT-SIDE HOOKS:
+-------------------------------------------------------------------------------
+pre-commit          # Before commit message
+prepare-commit-msg  # Before commit message editor
+commit-msg          # After commit message
+post-commit         # After commit
+pre-rebase          # Before rebase
+post-checkout       # After checkout
+post-merge          # After merge
+pre-push            # Before push
+-------------------------------------------------------------------------------
+
+PRE-COMMIT HOOK EXAMPLE:
+-------------------------------------------------------------------------------
+#!/bin/sh
+# File: .git/hooks/pre-commit
+
+echo "Running pre-commit checks..."
+
+# Check for debugging statements
+if grep -r "console.log" --include="*.js" src/; then
+    echo "ERROR: Remove console.log statements"
+    exit 1
+fi
+
+# Check for TODO comments
+if grep -r "TODO" --include="*.js" src/; then
+    echo "WARNING: Found TODO comments"
+fi
+
+# Run tests
+npm test
+if [ $? -ne 0 ]; then
+    echo "ERROR: Tests failed"
+    exit 1
+fi
+
+# Check file size
+max_size=1000000  # 1MB
+for file in $(git diff --cached --name-only); do
+    size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
+    if [ $size -gt $max_size ]; then
+        echo "ERROR: $file is too large"
+        exit 1
+    fi
+done
+
+echo "Pre-commit checks passed"
+exit 0
+-------------------------------------------------------------------------------
+
+COMMIT-MSG HOOK EXAMPLE:
+-------------------------------------------------------------------------------
+#!/bin/sh
+# File: .git/hooks/commit-msg
+
+# Commit message format validation
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}'
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "ERROR: Invalid commit message format"
+    echo "Valid formats:"
+    echo "  feat: add new feature"
+    echo "  fix: fix bug"
+    echo "  docs: update documentation"
+    exit 1
+fi
+
+# Check line length
+while read line; do
+    if [ ${#line} -gt 72 ]; then
+        echo "ERROR: Commit message line >72 characters"
+        exit 1
+    fi
+done < "$1"
+
+exit 0
+-------------------------------------------------------------------------------
+
+PRE-PUSH HOOK EXAMPLE:
+-------------------------------------------------------------------------------
+#!/bin/sh
+# File: .git/hooks/pre-push
+
+echo "Running pre-push checks..."
+
+# Don't push to main directly
+while read local_ref local_sha remote_ref remote_sha; do
+    if [ "$remote_ref" = "refs/heads/main" ]; then
+        echo "ERROR: Cannot push to main directly. Create a PR instead."
+        exit 1
+    fi
+done
+
+# Run full test suite
+npm run test:ci
+if [ $? -ne 0 ]; then
+    echo "ERROR: Tests failed"
+    exit 1
+fi
+
+exit 0
+-------------------------------------------------------------------------------
+
+SERVER-SIDE HOOKS:
+-------------------------------------------------------------------------------
+pre-receive        # Before accepting push
+update             # Per-branch before accepting
+post-receive       # After successful push
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+8. SUBMODULES
+===============================================================================
+
+Submodules allow including external repositories inside your repository.
+
+BASIC SUBMODULE COMMANDS:
+-------------------------------------------------------------------------------
+# Add a submodule
+git submodule add https://github.com/user/repo.git path/to/submodule
+git submodule add -b main https://github.com/user/repo.git path
+
+# Clone with submodules
+git clone --recursive https://github.com/user/main-repo.git
+git clone --recurse-submodules https://github.com/user/main-repo.git
+
+# Update submodules
+git submodule update --init --recursive
+git submodule update --remote              # Update to latest from remote
+-------------------------------------------------------------------------------
+
+SUBMODULE WORKFLOW:
+-------------------------------------------------------------------------------
+# When working with submodules
+cd path/to/submodule
+git checkout main
+git pull origin main
+cd ../..
+git add path/to/submodule
+git commit -m "chore: update submodule"
+git push
+
+# Update all submodules to latest
+git submodule foreach git pull origin main
+git add .
+git commit -m "chore: update all submodules"
+-------------------------------------------------------------------------------
+
+SUBMODULE COMMANDS:
+-------------------------------------------------------------------------------
+# Status and diff
+git submodule status                       # Show submodule status
+git submodule summary                       # Show summary of changes
+git diff --submodule                        # Show submodule diffs
+git config --global diff.submodule log      # Always show submodule logs
+
+# Advanced operations
+git submodule foreach 'git checkout main'   # Run command in each
+git submodule sync                          # Update remote URLs
+git submodule absorbgitdirs                 # Move git dirs into superproject
+
+# Remove submodule
+git submodule deinit -f path/to/submodule
+rm -rf .git/modules/path/to/submodule
+git rm -f path/to/submodule
+-------------------------------------------------------------------------------
