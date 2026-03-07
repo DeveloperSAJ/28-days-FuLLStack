@@ -1,0 +1,265 @@
+===============================================================================
+                  ADVANCED GIT GUIDE - PART 1: CORE CONCEPTS
+===============================================================================
+
+TABLE OF CONTENTS:
+------------------
+1. Git Internals
+2. Advanced Branching
+3. Rebase Deep Dive
+4. Interactive Rebase
+===============================================================================
+
+
+
+
+===============================================================================
+1. GIT INTERNALS
+===============================================================================
+
+Understanding Git Objects:
+-------------------------
+Git stores everything as objects in .git/objects/
+
+Object Types:
+• Blob  - File contents
+• Tree  - Directory listings  
+• Commit - Snapshots with metadata
+• Tag   - Named references to commits
+
+Commands to inspect objects:
+-------------------------------------------------------------------------------
+git cat-file -t <hash>     # View object type
+git cat-file -p <hash>     # View object content
+git ls-tree <tree-hash>    # List tree contents
+git show <commit-hash>     # Show commit details
+-------------------------------------------------------------------------------
+
+The Three Trees:
+---------------
+1. HEAD        - Last commit snapshot
+2. Index       - Staging area (proposed next commit)
+3. Working Dir - Local filesystem
+
+Compare different trees:
+-------------------------------------------------------------------------------
+git diff HEAD              # Working vs HEAD
+git diff --staged          # Staged vs HEAD
+git diff                   # Working vs Staged
+git diff --cached          # Same as --staged
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+2. ADVANCED BRANCHING
+===============================================================================
+
+Branch Management Commands:
+-------------------------------------------------------------------------------
+# Create and switch
+git checkout -b feature/new-feature
+git switch -c feature/new-feature    # Newer syntax
+
+# Delete branches
+git branch -d branch-name             # Safe delete (only if merged)
+git branch -D branch-name             # Force delete (even if unmerged)
+
+# Rename branches
+git branch -m old-name new-name       # Rename current branch
+git branch -m main new-name           # Rename specific branch
+
+# List branches
+git branch                            # Local branches
+git branch -r                          # Remote branches
+git branch -a                          # All branches (local + remote)
+git branch -vv                         # Verbose with tracking info
+-------------------------------------------------------------------------------
+
+Remote Branch Operations:
+-------------------------------------------------------------------------------
+# Push branch to remote
+git push -u origin feature-branch     # Push and set upstream
+
+# Delete remote branch
+git push origin --delete feature-branch
+git push origin :feature-branch        # Alternative syntax
+
+# Track remote branches
+git branch -u origin/main              # Set upstream for current branch
+git branch --set-upstream-to=origin/main
+git branch -u origin/main feature      # Set upstream for specific branch
+
+# Get remote info
+git remote show origin                  # Show detailed remote info
+git ls-remote origin                    # List remote references
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+3. REBASE DEEP DIVE
+===============================================================================
+
+What is Rebase?
+--------------
+Rebase rewrites commit history by applying commits from one branch onto 
+another, creating a linear history without merge commits.
+
+Basic Rebase Commands:
+-------------------------------------------------------------------------------
+git checkout feature-branch
+git rebase main                         # Rebase feature onto main
+
+git rebase origin/main                   # Rebase with upstream
+git rebase --onto new-base old-base feature # Rebase onto different branch
+-------------------------------------------------------------------------------
+
+How Rebase Works Internally:
+---------------------------
+1. Finds common ancestor (merge base)
+2. Saves patches of commits from feature branch
+3. Resets feature branch to target branch
+4. Applies saved patches sequentially
+
+GOLDEN RULE: Never rebase shared/public branches that others are working on!
+           Only rebase local/unpushed commits.
+
+Rebase Workflow Commands:
+-------------------------------------------------------------------------------
+# When conflicts occur during rebase
+git add .                               # Stage resolved files
+git rebase --continue                    # Continue after resolving
+git rebase --abort                       # Abort rebase and go back
+git rebase --skip                         # Skip current patch
+
+# Rebase with auto-squash
+git commit --fixup=<commit-hash>         # Mark commit as fixup
+git rebase -i --autosquash main           # Auto-arrange fixups
+-------------------------------------------------------------------------------
+
+MERGE vs REBASE Comparison:
+-------------------------------------------------------------------------------
+Feature         | Merge                      | Rebase
+----------------|----------------------------|-------------------
+History         | Preserves exact chronology | Creates linear history
+Conflicts       | Once at merge point        | Multiple times per commit
+Commit Hashes   | Preserved                   | New hashes created
+Use Case        | Public/shared branches     | Private/feature branches
+Safety          | Safe for all branches      | Only for local branches
+-------------------------------------------------------------------------------
+
+Visual Example:
+-------------------------------------------------------------------------------
+# Merge creates:    A---B---C---M
+#                  /           /
+#                 D---E-------/
+
+# Rebase creates:   A---B---C---D'---E'
+-------------------------------------------------------------------------------
+
+
+
+
+===============================================================================
+4. INTERACTIVE REBASE
+===============================================================================
+
+Interactive rebase allows rewriting history with fine-grained control.
+
+Command Structure:
+-------------------------------------------------------------------------------
+git rebase -i HEAD~n                    # Last n commits
+git rebase -i <commit-hash>              # Since specific commit
+git rebase -i --root                      # All commits from root
+-------------------------------------------------------------------------------
+
+INTERACTIVE REBASE COMMANDS:
+-------------------------------------------------------------------------------
+Command  | Short | Description
+---------|-------|--------------------
+pick     | p     | Use commit as is
+reword   | r     | Use commit but edit message
+edit     | e     | Stop for amending (add changes)
+squash   | s     | Meld into previous commit
+fixup    | f     | Like squash but discard message
+exec     | x     | Run shell command
+break    | b     | Stop here (useful for edits)
+drop     | d     | Remove commit
+-------------------------------------------------------------------------------
+
+Interactive Rebase Examples:
+-------------------------------------------------------------------------------
+# Squash last 3 commits into one
+git rebase -i HEAD~3
+# In editor, change 'pick' to 'squash' for commits 2 and 3
+
+# Reorder commits
+git rebase -i HEAD~3
+# Simply reorder the lines in the editor
+
+# Edit a specific commit
+git rebase -i HEAD~5
+# Mark commit with 'edit', then when stopped:
+git add .
+git commit --amend
+git rebase --continue
+
+# Split a commit into multiple
+git rebase -i HEAD~3
+# Mark commit with 'edit', then:
+git reset HEAD^
+git add -p  # Add parts selectively
+git commit -m "First part"
+git commit -m "Second part"
+git rebase --continue
+
+# Remove a commit
+git rebase -i HEAD~3
+# Delete the line of the commit or mark as 'drop'
+
+# Execute commands during rebase
+git rebase -i --exec "npm test" main    # Run tests after each commit
+git rebase -i --exec "git log -1" HEAD~3
+-------------------------------------------------------------------------------
+
+Advanced Interactive Rebase Techniques:
+-------------------------------------------------------------------------------
+# Fixup commits (auto-organize)
+git commit --fixup=<commit-hash>         # Create fixup commit
+git rebase -i --autosquash main           # Auto-arrange fixups
+
+# Rebase with signing
+git rebase -i --gpg-sign HEAD~3
+
+# Preserve merges during rebase
+git rebase -i --preserve-merges main      # (deprecated, use --rebase-merges)
+git rebase -i --rebase-merges main        # Preserve merge topology
+
+# Abort if any command fails
+git rebase -i --reschedule-failed-exec main
+-------------------------------------------------------------------------------
+
+Common Interactive Rebase Scenarios:
+-------------------------------------------------------------------------------
+# 1. Clean up WIP commits before PR
+git rebase -i origin/main
+# Squash all WIP commits into logical commits
+
+# 2. Fix typo in old commit message
+git rebase -i HEAD~5
+# Mark commit with 'reword'
+
+# 3. Add forgotten file to old commit
+git rebase -i HEAD~5
+# Mark commit with 'edit'
+git add forgotten-file.txt
+git commit --amend
+git rebase --continue
+
+# 4. Combine multiple commits
+git rebase -i HEAD~4
+# Set all except first to 'squash'
+-------------------------------------------------------------------------------
