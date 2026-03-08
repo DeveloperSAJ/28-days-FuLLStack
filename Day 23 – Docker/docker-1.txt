@@ -1,0 +1,130 @@
+██████╗  ██████╗  ██████╗██╗  ██╗███████╗██████╗ 
+██╔══██╗██╔═══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+██║  ██║██║   ██║██║     █████╔╝ █████╗  ██████╔╝
+██║  ██║██║   ██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
+██████╔╝╚██████╔╝╚██████╗██║  ██╗███████╗██║  ██║
+╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+
+============================================
+PART 1: DOCKER FUNDAMENTALS
+============================================
+1.1 WHAT IS DOCKER?
+Docker is a platform that enables developers to package applications into containers—standardized executable components that combine application source code with operating system (OS) libraries and dependencies required to run that code in any environment.
+
+The Problem Docker Solves:
+Before Docker: "It works on my machine!"
+After Docker: "It works everywhere!"
+
+Key Benefits:
+✓ Consistency across development, testing, and production
+✓ Isolation between applications
+✓ Portability across any system with Docker
+✓ Efficiency (lightweight compared to VMs)
+✓ Scalability (easy to scale horizontally)
+✓ Version control for application environments
+✓ Faster deployment and onboarding
+
+1.2 CORE CONCEPTS
+┌─────────────────────────────────────────────────────────────┐
+│ DOCKER ARCHITECTURE │
+├─────────────────────────────────────────────────────────────┤
+│ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ DOCKER CLIENT │ │
+│ │ (docker CLI commands) │ │
+│ └─────────────────────┬───────────────────────────────┘ │
+│ │ │
+│ ▼ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ DOCKER REST API │ │
+│ └─────────────────────┬───────────────────────────────┘ │
+│ │ │
+│ ▼ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ DOCKER DAEMON │ │
+│ │ (dockerd) │ │
+│ └─────────────┬───────────────────┬───────────────────┘ │
+│ │ │ │
+│ ▼ ▼ │
+│ ┌─────────────────────┐ ┌─────────────────────┐ │
+│ │ CONTAINERS │ │ IMAGES │ │
+│ │ (Running instances) │ │ (Templates) │ │
+│ └─────────────────────┘ └─────────────────────┘ │
+│ │ │ │
+│ ▼ ▼ │
+│ ┌─────────────────────┐ ┌─────────────────────┐ │
+│ │ VOLUMES │ │ NETWORKS │ │
+│ │ (Persistent data) │ │ (Communication) │ │
+│ └─────────────────────┘ └─────────────────────┘ │
+│ │
+└─────────────────────────────────────────────────────────────┘
+
+Docker Image
+Read-only template with instructions for creating a container
+
+Built in layers (each instruction adds a layer)
+
+Stored in a registry (Docker Hub, private registry)
+
+Immutable (once built, doesn't change)
+
+Docker Container
+Runnable instance of an image
+
+Isolated from host and other containers
+
+Has its own filesystem, network, and process tree
+
+Can be started, stopped, moved, and deleted
+
+Dockerfile
+Text file with instructions to build an image
+
+Automates image creation
+
+Version controllable like source code
+
+Docker Registry
+Storage and distribution system for images
+
+Docker Hub (public), Amazon ECR, Google Container Registry, etc.
+
+Can host private registries
+
+Docker Compose
+Tool for defining multi-container applications
+
+Uses YAML files for configuration
+
+One command to start entire application stack
+
+1.3 DOCKER VS VIRTUAL MACHINES
+┌─────────────────────────────────────────────────────────────────────┐
+│ COMPARISON: DOCKER CONTAINERS vs VIRTUAL MACHINES │
+├─────────────────────────────────────────────────────────────────────┤
+│ │
+│ VIRTUAL MACHINES: DOCKER CONTAINERS: │
+│ ┌─────────────────────┐ ┌─────────────────────┐ │
+│ │ App A │ App B │ │ App A │ App B │ │
+│ │ Libs │ Libs │ │ Libs │ Libs │ │
+│ │ Guest OS│ Guest OS │ └────────┴────────────┘ │
+│ ├─────────────────────┤ │ Docker Engine │ │
+│ │ Hypervisor │ ├─────────────────────┤ │
+│ ├─────────────────────┤ │ Host OS │ │
+│ │ Host OS │ ├─────────────────────┤ │
+│ ├─────────────────────┤ │ Hardware │ │
+│ │ Hardware │ └─────────────────────┘ │
+│ └─────────────────────┘ │
+│ │
+│ Size: GBs - TBs Size: MBs - GBs │
+│ Boot time: Minutes Boot time: Seconds │
+│ Memory: High overhead Memory: Low overhead │
+│ Isolation: Full hardware isolation Isolation: Process-level │
+│ Density: Few per host Density: Many per host │
+│ OS: Each VM has its own OS OS: Shares host kernel │
+│ │
+└─────────────────────────────────────────────────────────────────────┘
+
+============================================
+PART 2: DOCKER COMMANDS - COMPLETE REFERENCE
+============================================
